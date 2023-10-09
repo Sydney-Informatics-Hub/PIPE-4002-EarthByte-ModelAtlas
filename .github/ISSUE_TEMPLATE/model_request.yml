@@ -75,4 +75,12 @@ body:
         - label: attempted reproduction of a previous model (including with different codes, etc.)
         - label: missing data model (input files available, requires re-running by community)
 
+  - type: markdown
+    attributes:
+      value: "## Model computation and reproduction
 
+        ### Metadata Fields
+
+        The following fields provide information and references for sources and processes that were used to create the dataset.  Provide software and computing details, versioning, web references, DOIs, Github links, input datasets etc. on any of the components and workflows that went into the generation of the dataset."
+
+  
