@@ -26,6 +26,6 @@ body:
     attributes:
       label: Abstract
       description: "Please provide an abstract for your model (preferrably plain language)"
-      placeholder: ""
+      placeholder: "Lorem ipsum dolor sit amet, consectetur adipiscing elit..."
     validations:
       required: true
