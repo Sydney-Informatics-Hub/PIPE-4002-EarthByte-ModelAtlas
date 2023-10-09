@@ -197,4 +197,34 @@ body:
 
         `topography.csv`  | E.g. topography relative to initial (undeformed) upper boundary of model, units m  | 
 
-        
+
+
+  - type: markdown
+    attributes:
+      value: "## Attribution"
+
+
+  - type: input
+    id: publication
+    attributes:
+      label: Associated Publication DOI
+
+  - type: textarea
+    id: funders
+    attributes:
+      label: Funder(s)
+      description: "Please add rows as required if more than 1 funder."
+
+  - type: textarea
+    id: authors
+    attributes:
+      label: Author(s)
+
+  - type: input
+    id: model-license
+    attributes:
+      label: License
+      description: "If there is a license, please provide the name of the license (or None if there is no license specified). Please check our [model repository](https://airtable.com/shrUcrUnd7jB9ChZV) to explore valid licenses."
+      placeholder: "CC-BY-4.0"
+    validations:
+      required: true
