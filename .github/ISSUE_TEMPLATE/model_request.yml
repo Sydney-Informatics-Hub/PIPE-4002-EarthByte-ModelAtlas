@@ -141,7 +141,11 @@ body:
       description: "Please describe any additional files (related to model execution, reproduction and postprocessing) in the table below"
       value:
         Filename/pattern | Description | Notes
+
         --- | --- | ---
+
         E.g., `model_files/input.py` (add rows as needed) | E.g., description of `model_files/input.py` |
+
         E.g., `model_files/Dockerfile` (add rows as needed) | E.g., description of `model_files/Dockerfile`  | E.g., link to existing image on Dockerhub
+        
         E.g., `log.txt` | E.g., Logfile from original model execution on NCI Gadi  | 
