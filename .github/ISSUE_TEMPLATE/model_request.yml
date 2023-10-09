@@ -1,0 +1,31 @@
+name: M@TE Model Request
+description: Request a model to be included in the hub
+title: "M@TE Model Request: <name>"
+labels: [new-model]
+
+body:
+  - type: markdown
+    attributes:
+      value: "Thank you for taking the time to open a Model Request!"
+
+  - type: markdown
+    attributes:
+      value: "## About your model"
+
+  - type: input
+    id: title
+    attributes:
+      label: Title
+      description: "Suggest a title for your model"
+      placeholder: "Expanding Earth"
+    validations:
+      required: true
+
+  - type: textarea
+    id: abstract
+    attributes:
+      label: Abstract
+      description: "Please provide an abstract for your model (preferrably plain language)"
+      placeholder: ""
+    validations:
+      required: true
