@@ -29,3 +29,50 @@ body:
       placeholder: "Lorem ipsum dolor sit amet, consectetur adipiscing elit..."
     validations:
       required: true
+
+  - type: textarea
+    id: keywords
+    attributes:
+      label: Keywords
+      description: "Please provide keywords"
+      value: |
+        1.
+        2.
+        3.
+        ...
+    validations:
+      required: true
+
+  - type: dropdown
+    id: for_codes
+    attributes:
+      label: Field of Research (FoR) Codes
+      description: "Please add FoR Codes (see https://vocabs.ardc.edu.au/viewById/316)"
+      multiple: true
+      options:
+        - "3706: Geophysics"
+        - "370601: Applied geophysics"
+        - "370602: Electrial and electromagnetic methods in geophysics"
+        - "370603: Geodesy"
+        - "370604: Geodynamics"
+        - "370605: Geothermics and radiometrics"
+        - "370606: Gravimetrics"
+        - "370607: Magnetism and palaeomagnetism"
+        - "370608: Petrophysics and rock mechanics"
+        - "370609: Seismology and seismic exploration"
+        - "370610: Geophysics not elsewhere defined"
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: metadata_tags
+    attributes:
+      label: Metadata Tags
+      description: "Select relevant boxes"
+      options:
+        - label: published study
+        - label: community benchmark
+        - label: attempted reproduction of a previous model (including with different codes, etc.)
+        - label: missing data model (input files available, requires re-running by community)
+
+
