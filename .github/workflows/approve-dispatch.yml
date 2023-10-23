@@ -1,0 +1,27 @@
+name: Approve Command Dispatch
+
+on:
+  repository_dispatch:
+    types: [approve-command]
+
+permissions:
+  issues: write
+  contents: read
+
+jobs:
+  approveCommandDispatch:
+    runs-on: ubuntu-latest
+    steps:
+
+      # parse the issue body from free form text to a structured JSON object
+      - name: parse issue
+        uses: GrantBirki/issue-template-parser@v6.1.1
+        id: issue-parser
+        with:
+          body: ${{ github.event.client_payload.github.payload.issue.body }}
+
+      # echo the issue body to the console for debugging
+      - name: echo body
+        run: echo $ISSUE_BODY
+        env:
+          ISSUE_BODY: ${{ steps.issue-parser.outputs.json }}
