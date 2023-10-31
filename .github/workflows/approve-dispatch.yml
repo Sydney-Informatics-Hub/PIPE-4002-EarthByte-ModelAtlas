@@ -1,9 +1,9 @@
 name: Approve Command Dispatch
 
 on:
-  repository_dispatch:
-    types: [approve-command]
-
+  issue_comment:
+    types: [created]
+    
 permissions:
   issues: write
   contents: read

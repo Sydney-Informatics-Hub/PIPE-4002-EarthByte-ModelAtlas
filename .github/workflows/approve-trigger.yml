@@ -1,4 +1,4 @@
-name: Approve Command Triger
+name: Approve Command Trigger
 on:
   issue_comment:
     types: [created]
