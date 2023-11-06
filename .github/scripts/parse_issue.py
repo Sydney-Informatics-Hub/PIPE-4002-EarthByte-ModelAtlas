@@ -3,11 +3,8 @@ from github import Github, Auth
 
 token = os.environ.get("GITHUB_TOKEN")
 issue_number = os.environ.get("ISSUE_NUMBER")
-event = os.environ.get("EVENT")
 
 print("ISSUE_NUMBER:", issue_number)
-
-print(event)
 
 auth = Auth.Token(token)
 
