@@ -1,0 +1,36 @@
+name: Parse New Issue
+on:
+  issues:
+    types:
+      - opened
+jobs:
+  parseNewIssue:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # setup python
+      - name: setup python
+        uses: actions/setup-python@v4.7.0
+        with:
+          python-version: "3.10"
+
+      # setup conda
+      - name: add conda to system path
+        run: echo $CONDA/bin >> $GITHUB_PATH
+      - name: source conda
+        run: source $CONDA/etc/profile.d/conda.sh
+      - name: install dependencies through conda
+        run: |
+          source activate
+          conda init
+          conda install -c conda-forge pygithub
+
+      # parse issue
+      - name: parse issue
+        env:
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          GITHUB_TOKEN: ${{ secrets.PAT }}
+        run: |
+          python3 .github/scripts/parse_issue.py
