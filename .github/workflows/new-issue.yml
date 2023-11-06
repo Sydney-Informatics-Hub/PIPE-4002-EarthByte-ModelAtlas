@@ -31,7 +31,7 @@ jobs:
       - name: parse issue
         env:
           ISSUE_NUMBER: ${{ github.event.issue.number }}
-          EVENT: ${{ github.event }}
+          EVENT: ${{ github.event.issue }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           python3 .github/scripts/parse_issue.py
