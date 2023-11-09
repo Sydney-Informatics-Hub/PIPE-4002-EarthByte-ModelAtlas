@@ -8,7 +8,7 @@ SIH repo for work on PIPE-4002
   - [ ] Build drop down lists from existing resources, e.g. FOR Codes, file format vocabs.
 - [x] extract markdown from the issue body? 
   - [ ] Apply additional formatting, generating formatted blocks like tables
-- [x] Set up model repo based on slug
+- [] Set up model repo based on slug
   - [ ] need a template repository
   - [ ] Add licence
 
