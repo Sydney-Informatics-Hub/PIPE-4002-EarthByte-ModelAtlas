@@ -28,6 +28,20 @@ regex = r"\[(?P<filename>.*?)\]\((?P<url>.*?)\)"
 file_matches = re.findall(regex, issue.body)
 
 # Hack to recognise SVG files
+# Need to tidy this up, and are there any other files that filetype doesn't natively recognise?
+class Svg(filetype.Type):
+	MIME = 'image/svg+xml'
+	EXTENSION = 'svg'
+
+	def __init__(self):
+		super(Svg, self).__init__(
+			mime = Svg.MIME,
+			extension = Svg.EXTENSION
+			)
+
+	def match(self, buf):
+		return False
+
 filetype.add_type(Svg())
 
 # Download files and move them to the correct location in the repo
@@ -43,17 +57,3 @@ for filename, url in file_matches:
 
 print(issue.body)
 
-
-# SVG filetype class for hack
-class Svg(filetype.Type):
-	MIME = 'image/svg+xml'
-	EXTENSION = 'svg'
-
-	def __init__(self):
-		super(Svg, self).__init__(
-			mime = Svg.MIME,
-			extension = Svg.EXTENSION
-			)
-
-	def match(self, buf):
-		return False
