@@ -8,12 +8,12 @@ SIH repo for work on PIPE-4002
   - [ ] Build drop down lists from existing resources, e.g. FOR Codes, file format vocabs.
 - [x] extract markdown from the issue body? 
   - [ ] Apply additional formatting, generating formatted blocks like tables
-- [] Set up model repo based on slug
+- [ ] Set up model repo based on slug
   - [ ] need a template repository
   - [ ] Add licence file based on dropdown list
 
-- [ ]  Handling drag-and-dropped files, and putting them somewhere sensible (building appropriate sub directories)
-
+- [ ]  Handling drag-and-dropped files, and putting them somewhere sensible (building appropriate sub. directories)
+- [ ]  
 - [ ] Build a manifest from these files. 
 
 - [ ] Error checking. Have Python do basic checking for things like DOIs/ ORCIDs 
