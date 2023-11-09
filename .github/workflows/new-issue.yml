@@ -25,7 +25,7 @@ jobs:
         run: |
           source activate
           conda init
-          conda install -c conda-forge pygithub
+          conda install -c conda-forge pygithub filetype
 
       # parse issue
       - name: parse issue
