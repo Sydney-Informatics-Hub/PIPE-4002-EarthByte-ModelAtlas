@@ -10,17 +10,17 @@ SIH repo for work on PIPE-4002
   - [ ] Apply additional formatting, generating formatted blocks like tables
 - [] Set up model repo based on slug
   - [ ] need a template repository
-  - [ ] Add licence
+  - [ ] Add licence file based on dropdown list
 
-- [ ]  Handling drag-and-dropped files, and putting them somewhere sensible (building appropriate sub directories) (TIM/SIH)
+- [ ]  Handling drag-and-dropped files, and putting them somewhere sensible (building appropriate sub directories)
 
 - [ ] Build a manifest from these files. 
 
-- [ ] Error checking. Have Python do basic checking for things like DOIs/ ORCIDs (TIM/SIH)
+- [ ] Error checking. Have Python do basic checking for things like DOIs/ ORCIDs 
 
-  - [ ] Elementary checking is to make sure the website resolves (i.e doesn't throw a 504)
+  - [ ] Elementary checking to make sure the address resolves
 
-  - [ ] More advanced checking involves actually tyring to parse the  DOI metadata, but tis can be tricky what can we get?
+  - [ ] More advanced checking involves actually tyring to parse the DOI metadata, but this can be tricky?
 
 - [ ] Building the website YAML from the validated issue.
 - [ ] Create a metadata file (json, file) for, e.g. NCI 
