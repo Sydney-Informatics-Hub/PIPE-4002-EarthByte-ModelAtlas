@@ -13,7 +13,6 @@ SIH repo for work on PIPE-4002
   - [ ] Add licence file based on dropdown list
 
 - [ ]  Handling drag-and-dropped files, and putting them somewhere sensible (building appropriate sub. directories)
-- [ ]  
 - [ ] Build a manifest from these files. 
 
 - [ ] Error checking. Have Python do basic checking for things like DOIs/ ORCIDs 
