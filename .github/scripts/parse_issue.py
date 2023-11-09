@@ -44,6 +44,7 @@ class Svg(filetype.Type):
 
 filetype.add_type(Svg())
 
+filenames = []
 # Download files and move them to the correct location in the repo
 for filename, url in file_matches:
 	response = requests.get(url)
@@ -53,7 +54,10 @@ for filename, url in file_matches:
 		filename += '.'+filetype.get_type(mime=response.headers.get('Content-Type')).extension
 
 	repo.create_file("pages/models/"+slug+"/"+filename,"add "+filename,response.content)
+	filenames.append(filename)
 
+# Test making a comment - could this be edited later for the uploader to give file descriptions?
+issue.create_comment(str(filenames))
 
 print(issue.body)
 
