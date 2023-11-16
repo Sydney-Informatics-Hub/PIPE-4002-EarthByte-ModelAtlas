@@ -20,7 +20,7 @@ slug = re.search(r"\<(?P<title>.*?)\>", issue.title).group('title').replace(" ",
 # Identify headings and subsequent text
 regex = r"### *(?P<key>.*?)\s*[\r\n]+(?P<value>[\s\S]*?)(?=###|$)"
 
-matches = re.findall(regex, issue.body)
+data = dict(re.findall(regex, issue.body))
 
 
 # Identify uploaded files

@@ -1,0 +1,45 @@
+templateKey: 'model'
+slug: 'placeholder_slug'
+title: 'placeholder_title'
+date: 2023-08-28T15:04:10.000Z
+featuredpost: false
+for_codes:
+  - placeholder_for_code
+status: placeholder_status
+software: placeholder_software
+licence: placeholder_licence
+uploader:
+  name: placeholder_uploader_name
+  email: placeholder_uploade_email
+authors:
+  - name: placeholder_author_name
+    email: placeholder_author_email
+    orcid: placeholder_author_orcid
+tags:
+  - placeholder_tag
+abstract: >
+  placeholder_abstract
+images:
+  landing_image:
+    src: placeholder_landing_image_src
+    alt: "Alt text for landing image"
+  graphic_abstract:
+    src: placeholder_graphic_abstract_src
+    alt: "Alt text for graphic abstract"
+  model_setup:
+    src: placeholder_model_setup_src
+    alt: "Alt text for model setup"
+animations:
+  - src: placeholder_animation_src
+    alt: "Alt text for animation"
+dataset:
+  url: placeholder_dataset_url
+  doi: placeholder_doi
+  notes: |
+    placeholder_dataset_notes
+input_files:
+  url: placeholder_input_files_url
+  notes: placeholder_input_files_notes
+postprocessing_files:
+  url: placeholder_postprocessing_files_url
+  notes: placeholder_postprocessing_files_notes
