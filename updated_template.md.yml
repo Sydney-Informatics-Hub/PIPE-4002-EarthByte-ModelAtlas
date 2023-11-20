@@ -1,0 +1,77 @@
+# no spaces in key names, use underscores please
+# - / > multiline text (what is the difference?) 
+# https://yaml.org/spec/1.2.2/
+---
+templateKey: 'model'
+slug:
+title:
+date:
+featuredpost: false
+for_codes:
+  - 
+status:
+#repeat these items for several softwares
+software:
+  - name:
+    doi:
+    url_source: 
+licence:
+  - name:
+  - licence_url:
+  - licence_image:
+  - description:
+contributor:
+    name:
+    family_name:
+    ORCID:
+    affiliation:
+#repeat these items for several authors
+authors:
+  - name:
+    family_name:
+    ORCID:
+    affiliation:
+#repeat these items for several publications
+associated_publication:
+  - title:
+    journal:
+    publisher:
+    doi:
+    url:
+compute info:
+  computer_name:
+  organisation:
+  doi:
+  url:
+research_tags:
+  -
+compute tags:
+  -
+grants_funders:
+  - funder_name:
+    number_id:
+    doi:
+abstract: >
+images:
+  landing_image:
+    src:
+    caption:
+  graphic_abstract:
+    src:
+    caption:
+  model_setup:
+    src:
+    caption:
+animations:
+  - src:
+    caption:
+dataset:
+  url: 
+  doi:
+  notes: >
+  file_tree:
+model_files:
+  url: 
+  notes:
+  file_tree:
+---
