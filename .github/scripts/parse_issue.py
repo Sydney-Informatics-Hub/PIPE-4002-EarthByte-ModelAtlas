@@ -12,7 +12,7 @@ print(issue_number)
 # Get issue
 auth = Auth.Token(token)
 g = Github(auth=auth)
-repo = g.get_repo('Sydney-Informatics-Hub/PIPE-4002-EarthByte-ModelAtlas')
+repo = g.get_repo('hvidy/PIPE-4002-EarthByte-ModelAtlas')
 issue = repo.get_issue(number = issue_number)
 
 # Generate slug
