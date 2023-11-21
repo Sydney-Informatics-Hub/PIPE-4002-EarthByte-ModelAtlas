@@ -7,6 +7,8 @@ from github import Github, Auth
 token = os.environ.get("GITHUB_TOKEN")
 issue_number = int(os.environ.get("ISSUE_NUMBER"))
 
+print(issue_number)
+
 # Get issue
 auth = Auth.Token(token)
 g = Github(auth=auth)
