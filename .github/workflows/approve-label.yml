@@ -1,8 +1,8 @@
 name: Approve Label Trigger
 on: 
-  label:
+  issues:
     types: 
-      - created
+      - labeled
 jobs:
   parseNewIssue:
     if: contains(github.event.issue.labels.*.name, 'approved')
