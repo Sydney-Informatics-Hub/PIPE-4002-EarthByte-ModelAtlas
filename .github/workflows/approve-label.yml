@@ -5,7 +5,7 @@ on:
       - created
 jobs:
   parseNewIssue:
-    if: contains(github.event.issue.labels.*.name, 'approve')
+    if: contains(github.event.issue.labels.*.name, 'approved')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
