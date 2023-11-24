@@ -53,4 +53,4 @@ jobs:
           TEMPLATE: ModelAtlasofTheEarth/mate_template
           FLAGS: --public
         run: 
-          gh repo create ${OWNER}/${REPO_NAME} -- template $TEMPLATE $FLAGS
+          gh repo create ${OWNER}/${REPO_NAME} --template $TEMPLATE $FLAGS
