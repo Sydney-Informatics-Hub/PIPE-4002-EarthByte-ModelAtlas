@@ -1,7 +1,7 @@
 name: M@TE Model Request
 description: Request a model to be included in the hub
 title: "M@TE Model Request: <name>"
-labels: [new-model]
+labels: ["new model"]
 
 body:
   - type: markdown

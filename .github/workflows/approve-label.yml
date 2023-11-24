@@ -5,7 +5,7 @@ on:
       - labeled
 jobs:
   parseNewIssue:
-    if: contains(github.event.issue.labels.*.name, 'approved')
+    if: contains(github.event.issue.labels.*.name, 'new issue')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -35,3 +35,22 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           python3 .github/scripts/parse_issue.py
+
+  createNewRepo:
+    if: contains(github.event.issue.labels.*.name, 'approved')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # create the model repo from the template
+      - name: create model repo
+        id: create-model-repo
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OWNER: hvidy
+          REPO_NAME: template_test
+          TEMPLATE: ModelAtlasofTheEarth/mate_template
+          FLAGS: --public
+        run: 
+          gh repo create ${OWNER}/${REPO_NAME} -- template $TEMPLATE $FLAGS
