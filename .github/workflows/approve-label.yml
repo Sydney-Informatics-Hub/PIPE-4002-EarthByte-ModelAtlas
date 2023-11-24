@@ -5,7 +5,7 @@ on:
       - labeled
 jobs:
   parseNewIssue:
-    if: contains(github.event.issue.labels.*.name, 'new issue')
+    if: contains(github.event.issue.labels.*.name, 'new model')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
