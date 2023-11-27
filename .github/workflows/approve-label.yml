@@ -5,7 +5,7 @@ on:
       - labeled
 jobs:
   parseNewIssue:
-    if: contains(github.event.issue.labels.*.name, 'new model')
+    if: contains(github.event.label.name, 'new model')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -37,7 +37,7 @@ jobs:
           python3 .github/scripts/parse_issue.py
 
   createNewRepo:
-    if: contains(github.event.issue.labels.*.name, 'approved')
+    if: contains(github.event.label.name, 'approved')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
