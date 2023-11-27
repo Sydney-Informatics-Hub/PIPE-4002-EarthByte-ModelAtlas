@@ -47,7 +47,7 @@ jobs:
       - name: create model repo
         id: create-model-repo
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.PAT }}
           OWNER: hvidy
           REPO_NAME: template_test
           TEMPLATE: ModelAtlasofTheEarth/mate_template
