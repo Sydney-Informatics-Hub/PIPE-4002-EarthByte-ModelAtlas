@@ -58,6 +58,7 @@ jobs:
           ISSUE_NAME: ${{ github.event.issue.title }}
           TEMPLATE: hvidy/mate_template
           FLAGS: --public
-        run: 
+        run: |
           REPO_NAME=$(python3 .github/scripts/generate_identifier.py)
+          echo "repo_name=${REPO_NAME}"
           gh repo create ${OWNER}/${REPO_NAME} --template $TEMPLATE $FLAGS
