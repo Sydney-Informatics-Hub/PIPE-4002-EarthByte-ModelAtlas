@@ -43,14 +43,21 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      # setup python
+      - name: setup python
+        uses: actions/setup-python@v4.7.0
+        with:
+          python-version: "3.10"
+
       # create the model repo from the template
       - name: create model repo
         id: create-model-repo
         env:
           GITHUB_TOKEN: ${{ secrets.PAT }}
           OWNER: hvidy
-          REPO_NAME: template_test
+          ISSUE_NAME: ${{ github.event.issue.title }}
           TEMPLATE: hvidy/mate_template
           FLAGS: --public
         run: 
+          REPO_NAME=$(python3 .github/scripts/generate_identifier.py)
           gh repo create ${OWNER}/${REPO_NAME} --template $TEMPLATE $FLAGS
