@@ -60,5 +60,16 @@ jobs:
           FLAGS: --public
         run: |
           REPO_NAME=$(python3 .github/scripts/generate_identifier.py)
-          echo "repo_name=${REPO_NAME}"
           gh repo create ${OWNER}/${REPO_NAME} --template $TEMPLATE $FLAGS
+          echo "repo_name=${REPO_NAME}" >> $GITHUB_OUTPUT
+
+      # copy files to the new repo
+      - name: copy files
+        id: copy-files
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT }}
+          OWNER: hvidy
+          REPO: $${{ steps.create-mode-repo.outputs.repo_name }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          python3 .github/scripts/copy_files.py

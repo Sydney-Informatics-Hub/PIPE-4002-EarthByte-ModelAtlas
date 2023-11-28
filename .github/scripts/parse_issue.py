@@ -73,7 +73,7 @@ for filename, url in file_matches:
 		filename += '.'+filetype.get_type(mime=response.headers.get('Content-Type')).extension
 
 	# repo.create_file("pages/models/"+slug+"/"+filename,"add "+filename,response.content)
-	parse_log += filename + "| \n"
+	parse_log += filename + " | \n"
 	filenames.append(filename)
 
 # Test making a comment - could this be edited later for the uploader to give file descriptions?
