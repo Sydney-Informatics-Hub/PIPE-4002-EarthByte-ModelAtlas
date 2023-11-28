@@ -49,6 +49,17 @@ jobs:
         with:
           python-version: "3.10"
 
+      # setup conda
+      - name: add conda to system path
+        run: echo $CONDA/bin >> $GITHUB_PATH
+      - name: source conda
+        run: source $CONDA/etc/profile.d/conda.sh
+      - name: install dependencies through conda
+        run: |
+          source activate
+          conda init
+          conda install -c conda-forge pygithub filetype
+
       # create the model repo from the template
       - name: create model repo
         id: create-model-repo
