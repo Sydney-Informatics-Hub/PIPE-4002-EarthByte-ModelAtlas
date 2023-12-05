@@ -81,9 +81,9 @@ for author in authors:
 parse_log += "The following author(s) were found successfully:\n"
 for author in author_list:
 	if "@id" in author:
-		parse_log += f"- {author["givenName"]} {author["familyName"]} ({author["@id"]})\n"
+		parse_log += f"- {author['givenName']} {author['familyName']} ({author['@id']})\n"
 	else:
-		parse_log += f"- {author["givenName"]} {author["familyName"]}\n"
+		parse_log += f"- {author['givenName']} {author['familyName']}\n"
 
 
 # Identify uploaded files
