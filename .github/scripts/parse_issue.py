@@ -4,27 +4,33 @@ import filetype
 import requests
 import subprocess
 from github import Github, Auth
+import orcid
 
 token = os.environ.get("GITHUB_TOKEN")
 issue_number = int(os.environ.get("ISSUE_NUMBER"))
+orcid_id = os.environ.get("ORCID_ID")
+orcid_pw = os.environ.get("ORCID_PW")
 
-parse_log = ""
+parse_log = "Thank you for submitting. Please check the output below, and fix any errors, etc.\n\n"
 
 # Get issue
 auth = Auth.Token(token)
 g = Github(auth=auth)
-repo = g.get_repo('hvidy/PIPE-4002-EarthByte-ModelAtlas')
+repo = g.get_repo("hvidy/PIPE-4002-EarthByte-ModelAtlas")
 issue = repo.get_issue(number = issue_number)
 
+
 # Verify repo name can be created
+parse_log += "**Model Repository**\n"
+
 os.environ['ISSUE_NAME'] = issue.title
 cmd = "python3 .github/scripts/generate_identifier.py"
 try:
-	slug = subprocess.check_output(cmd, shell=True, stderr=open(os.devnull))
-	parse_log += "Model repo will try be created with name "+slug
+	slug = subprocess.check_output(cmd, shell=True, text=True, stderr=open(os.devnull)).strip()
+	parse_log += f"Model repo will try be created with name {slug}"
 except Exception as err:
-	parse_log += "Unable to create valid repo name... \n"
-	parse_log += f"Unexpected {err=}, {type(err)=}"
+	parse_log += "- Unable to create valid repo name... \n"
+	parse_log += f"`{err}`\n"
 
 
 # Parse issue body
@@ -34,10 +40,54 @@ regex = r"### *(?P<key>.*?)\s*[\r\n]+(?P<value>[\s\S]*?)(?=###|$)"
 data = dict(re.findall(regex, issue.body))
 
 
-# Identify uploaded files
+# Identify authors
+parse_log += "**Author(s)**\n"
 
-parse_log += "\n"
-parse_log += "**File manifest**\n"
+authors = data['Author(s)'].strip().split('\r\n')
+
+orcid_pattern = re.compile(r'\d{4}-\d{4}-\d{4}-\d{3}[0-9X]')
+name_pattern = re.compile(r'([\w\.\-\u00C0-\u017F]+(?: [\w\.\-\u00C0-\u017F]+)*), ([\w\.\-\u00C0-\u017F]+(?: [\w\.\-\u00C0-\u017F]+)*)')
+
+api = orcid.PublicAPI(ORCID_ID, ORCID_PW, sandbox=False)
+search_token = api.get_search_token_from_orcid()
+
+author_list = []
+
+for author in authors:
+	if orcid_pattern.fullmatch(author):
+		try:
+			record = api.read_record_public(author, 'record', search_token)
+			author_record = {
+				"@type": "Person",
+				"@id": summary['orcid-identifier']['path'],
+				"givenName": summary['person']['name']['given-names']['value'],
+				"familyName": summary['person']['name']['family-name']['value'],
+				}
+			author_list.append(author_record)
+		except Exception as err:
+			parse_log += "- Unable to find ORCID iD. Check you have entered it correctly. \n"
+			parse_log += f"`{err}`\n"
+	else:
+		try:
+			familyName, givenName = author.split(",")
+			author_record = {
+				"@type": "Person",
+				"givenName": givenName,
+				"familyName": familyName,
+			}
+		except:
+			parse_log += f"- Author name {author} in unexpected format. Excpected `last name(s), first name(s)`. \n"
+
+parse_log += "The following author(s) were found successfully:\n"
+for author in author_list:
+	if "@id" in author:
+		parse_log += f"- {author["givenName"]} {author["familyName"]} ({author["@id"]})\n"
+	else:
+		parse_log += f"- {author["givenName"]} {author["familyName"]}\n"
+
+
+# Identify uploaded files
+parse_log += "**File Manifest**\n"
 parse_log += "The files listed in the table below require descriptions. Please edit this comment to insert them into the table. \n"
 parse_log += "\n"
 parse_log += "Filename | File Description \n"
