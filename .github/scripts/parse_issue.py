@@ -27,7 +27,7 @@ os.environ['ISSUE_NAME'] = issue.title
 cmd = "python3 .github/scripts/generate_identifier.py"
 try:
 	slug = subprocess.check_output(cmd, shell=True, text=True, stderr=open(os.devnull)).strip()
-	parse_log += f"Model repo will try be created with name {slug}"
+	parse_log += f"Model repo will try be created with name `{slug}` \n"
 except Exception as err:
 	parse_log += "- Unable to create valid repo name... \n"
 	parse_log += f"`{err}`\n"
@@ -59,11 +59,10 @@ for author in authors:
 			record = api.read_record_public(author, 'record', search_token)
 			author_record = {
 				"@type": "Person",
-				"@id": summary['orcid-identifier']['path'],
-				"givenName": summary['person']['name']['given-names']['value'],
-				"familyName": summary['person']['name']['family-name']['value'],
+				"@id": record['orcid-identifier']['path'],
+				"givenName": record['person']['name']['given-names']['value'],
+				"familyName": record['person']['name']['family-name']['value'],
 				}
-			author_list.append(author_record)
 		except Exception as err:
 			parse_log += "- Unable to find ORCID iD. Check you have entered it correctly. \n"
 			parse_log += f"`{err}`\n"
@@ -76,7 +75,9 @@ for author in authors:
 				"familyName": familyName,
 			}
 		except:
-			parse_log += f"- Author name {author} in unexpected format. Excpected `last name(s), first name(s)`. \n"
+			parse_log += f"- Author name {author} in unexpected format. Excpected `last name(s), first name(s)`. \n\n"
+
+	author_list.append(author_record)
 
 parse_log += "The following author(s) were found successfully:\n"
 for author in author_list:
@@ -85,6 +86,7 @@ for author in author_list:
 	else:
 		parse_log += f"- {author['givenName']} {author['familyName']}\n"
 
+parse_log += "\n"
 
 # Identify uploaded files
 parse_log += "**File Manifest**\n"
