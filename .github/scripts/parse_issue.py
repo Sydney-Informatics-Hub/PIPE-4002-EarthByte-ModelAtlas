@@ -27,10 +27,10 @@ os.environ['ISSUE_NAME'] = issue.title
 cmd = "python3 .github/scripts/generate_identifier.py"
 try:
 	slug = subprocess.check_output(cmd, shell=True, text=True, stderr=open(os.devnull)).strip()
-	parse_log += f"Model repo will try be created with name `{slug}` \n"
+	parse_log += f"Model repo will try be created with name `{slug}` \n\n"
 except Exception as err:
 	parse_log += "- Unable to create valid repo name... \n"
-	parse_log += f"`{err}`\n"
+	parse_log += f"`{err}`\n\n"
 
 
 # Parse issue body
@@ -77,16 +77,16 @@ for author in authors:
 			}
 			author_list.append(author_record)
 		except:
-			parse_log += f"- Author name {author} in unexpected format. Excpected `last name(s), first name(s)`. \n\n"
+			parse_log += f"- Author name {author} in unexpected format. Excpected `last name(s), first name(s)`. \n"
 
-parse_log += "The following author(s) were found successfully:\n"
+parse_log += "\nThe following author(s) were found successfully:\n"
 for author in author_list:
 	if "@id" in author:
 		parse_log += f"- {author['givenName']} {author['familyName']} ({author['@id']})\n"
 	else:
 		parse_log += f"- {author['givenName']} {author['familyName']}\n"
-
 parse_log += "\n"
+
 
 # Identify uploaded files
 parse_log += "**File Manifest**\n"
