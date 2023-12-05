@@ -48,7 +48,7 @@ authors = data['Author(s)'].strip().split('\r\n')
 orcid_pattern = re.compile(r'\d{4}-\d{4}-\d{4}-\d{3}[0-9X]')
 name_pattern = re.compile(r'([\w\.\-\u00C0-\u017F]+(?: [\w\.\-\u00C0-\u017F]+)*), ([\w\.\-\u00C0-\u017F]+(?: [\w\.\-\u00C0-\u017F]+)*)')
 
-api = orcid.PublicAPI(ORCID_ID, ORCID_PW, sandbox=False)
+api = orcid.PublicAPI(orcid_id, orcid_pw, sandbox=False)
 search_token = api.get_search_token_from_orcid()
 
 author_list = []
