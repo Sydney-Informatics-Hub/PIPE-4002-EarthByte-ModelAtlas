@@ -63,6 +63,7 @@ for author in authors:
 				"givenName": record['person']['name']['given-names']['value'],
 				"familyName": record['person']['name']['family-name']['value'],
 				}
+			author_list.append(author_record)
 		except Exception as err:
 			parse_log += "- Unable to find ORCID iD. Check you have entered it correctly. \n"
 			parse_log += f"`{err}`\n"
@@ -74,10 +75,9 @@ for author in authors:
 				"givenName": givenName,
 				"familyName": familyName,
 			}
+			author_list.append(author_record)
 		except:
 			parse_log += f"- Author name {author} in unexpected format. Excpected `last name(s), first name(s)`. \n\n"
-
-	author_list.append(author_record)
 
 parse_log += "The following author(s) were found successfully:\n"
 for author in author_list:
