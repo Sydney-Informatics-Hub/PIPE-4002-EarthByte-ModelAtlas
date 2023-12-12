@@ -4,12 +4,11 @@ import filetype
 import requests
 import subprocess
 from github import Github, Auth
-import orcid
+
+from metadat_utils import get_crossref_article, get_authors
 
 token = os.environ.get("GITHUB_TOKEN")
 issue_number = int(os.environ.get("ISSUE_NUMBER"))
-orcid_id = os.environ.get("ORCID_ID")
-orcid_pw = os.environ.get("ORCID_PW")
 
 parse_log = "Thank you for submitting. Please check the output below, and fix any errors, etc.\n\n"
 
@@ -40,45 +39,42 @@ regex = r"### *(?P<key>.*?)\s*[\r\n]+(?P<value>[\s\S]*?)(?=###|$)"
 
 data = dict(re.findall(regex, issue.body))
 
+# Associated Publication
+parse_log += "**Associated Publication**\n"
+
+publication = data["Associated Publication DOI"].strip()
+
+if publication == "_No response_":
+	parse_log += "No DOI provided. \n"
+else:
+	try:
+		publication_metadata = get_crossref_article(publication)
+		parse_log += f"Found publication _{publication_metadata["name"]}_"
+
+		author_list = publication_metadata["author"]
+		if funder in publication_metadata:
+			funder_list = publication_metadata["funder"]
+		if abstract in publication_metadata:
+			abstract = publication_metadata["abstract"]
+
+	except Exception as err:
+		parse_log += f"- Error: unable to obtain metadata for DOI {publication} \n"
+		parse_log += f"`{err}`\n"
+
 
 # Identify authors
 parse_log += "**Author(s)**\n"
 
 authors = data['Author(s)'].strip().split('\r\n')
 
-orcid_pattern = re.compile(r'\d{4}-\d{4}-\d{4}-\d{3}[0-9X]')
-name_pattern = re.compile(r'([\w\.\-\u00C0-\u017F]+(?: [\w\.\-\u00C0-\u017F]+)*), ([\w\.\-\u00C0-\u017F]+(?: [\w\.\-\u00C0-\u017F]+)*)')
-
-api = orcid.PublicAPI(orcid_id, orcid_pw, sandbox=False)
-search_token = api.get_search_token_from_orcid()
-
-author_list = []
-
-for author in authors:
-	if orcid_pattern.fullmatch(author):
-		try:
-			record = api.read_record_public(author, 'record', search_token)
-			author_record = {
-				"@type": "Person",
-				"@id": record['orcid-identifier']['path'],
-				"givenName": record['person']['name']['given-names']['value'],
-				"familyName": record['person']['name']['family-name']['value'],
-				}
-			author_list.append(author_record)
-		except Exception as err:
-			parse_log += "- Unable to find ORCID iD. Check you have entered it correctly. \n"
-			parse_log += f"`{err}`\n"
+if authors == "_No response_":
+	if author_list in locals():
+		parse_log += "_Author list taken from associated publication_"
 	else:
-		try:
-			familyName, givenName = author.split(",")
-			author_record = {
-				"@type": "Person",
-				"givenName": givenName,
-				"familyName": familyName,
-			}
-			author_list.append(author_record)
-		except:
-			parse_log += f"- Author name {author} in unexpected format. Excpected `last name(s), first name(s)`. \n"
+		parse_log += "- Error: no authors found"
+else:
+	author_list, log = get_authors(authors)
+	parse_log += log
 
 parse_log += "\n"
 parse_log += "The following author(s) were found successfully:\n"
