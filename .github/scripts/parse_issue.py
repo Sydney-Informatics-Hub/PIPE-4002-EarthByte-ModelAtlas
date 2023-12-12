@@ -49,7 +49,7 @@ if publication == "_No response_":
 else:
 	try:
 		publication_metadata = get_crossref_article(publication)
-		parse_log += f"Found publication _{publication_metadata["name"]}_"
+		parse_log += f"Found publication _{publication_metadata['name']}_"
 
 		author_list = publication_metadata["author"]
 		if funder in publication_metadata:
