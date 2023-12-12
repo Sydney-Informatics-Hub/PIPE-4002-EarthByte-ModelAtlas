@@ -55,7 +55,7 @@ else:
 		if "funder" in publication_metadata:
 			funder_list = publication_metadata["funder"]
 		if "abstract" in publication_metadata:
-			abstract = publication_metadata["abstract"]
+			publication_abstract = publication_metadata["abstract"]
 
 	except Exception as err:
 		parse_log += f"- Error: unable to obtain metadata for DOI {publication} \n"
@@ -85,6 +85,42 @@ for author in author_list:
 		parse_log += f"- {author['givenName']} {author['familyName']} ({author['@id']})\n"
 	else:
 		parse_log += f"- {author['givenName']} {author['familyName']}\n"
+parse_log += "\n"
+
+# Abstract
+parse_log += "**Abstract**\n"
+
+abstract = data['Abstract'].strip()
+
+if abstract == "_No response_":
+	if "publication_abstract" in locals():
+		abstract = publication_abstract
+		parse_log += "_Abstract taken from associated publication_ \n"
+	else:
+		parse_log += "- Error: No abstract provided or found in publication. \n"
+
+parse_log += abstract + "\n"
+
+
+# Identify funders
+parse_log += "**Funder(s)**\n"
+
+funders = data['Funder(s)'].strip().split('\r\n')
+
+if funders[0] == "_No response_":
+	if "funder_list" in locals():
+		parse_log += "_Funder list taken from associated publication_ \n"
+	else:
+		parse_log += "- Warning: No funders provided or found in publication. \n"
+else:
+	funder_list = []
+	for funder in funders:
+		funder_list.append({"@type": "Organization", "name": funder})
+
+parse_log += "\n"
+parse_log += "The following funder(s) were found successfully:\n"
+for funder in funder_list:
+	parse_log += f"- {funder['name']} \n"
 parse_log += "\n"
 
 
