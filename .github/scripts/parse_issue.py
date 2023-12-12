@@ -52,9 +52,9 @@ else:
 		parse_log += f"Found publication _{publication_metadata['name']}_"
 
 		author_list = publication_metadata["author"]
-		if funder in publication_metadata:
+		if "funder" in publication_metadata:
 			funder_list = publication_metadata["funder"]
-		if abstract in publication_metadata:
+		if "abstract" in publication_metadata:
 			abstract = publication_metadata["abstract"]
 
 	except Exception as err:
