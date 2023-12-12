@@ -49,7 +49,7 @@ if publication == "_No response_":
 else:
 	try:
 		publication_metadata = get_crossref_article(publication)
-		parse_log += f"Found publication _{publication_metadata['name']}_"
+		parse_log += f"Found publication _{publication_metadata['name']}_. \n"
 
 		author_list = publication_metadata["author"]
 		if "funder" in publication_metadata:
@@ -61,13 +61,15 @@ else:
 		parse_log += f"- Error: unable to obtain metadata for DOI {publication} \n"
 		parse_log += f"`{err}`\n"
 
+parse_log += "\n"
+
 
 # Identify authors
 parse_log += "**Author(s)**\n"
 
 authors = data['Author(s)'].strip().split('\r\n')
 
-if authors == "_No response_":
+if authors[0] == "_No response_":
 	if author_list in locals():
 		parse_log += "_Author list taken from associated publication_"
 	else:
