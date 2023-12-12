@@ -70,10 +70,10 @@ parse_log += "**Author(s)**\n"
 authors = data['Author(s)'].strip().split('\r\n')
 
 if authors[0] == "_No response_":
-	if author_list in locals():
-		parse_log += "_Author list taken from associated publication_"
+	if "author_list" in locals():
+		parse_log += "_Author list taken from associated publication_ \n"
 	else:
-		parse_log += "- Error: no authors found"
+		parse_log += "- Error: no authors found \n"
 else:
 	author_list, log = get_authors(authors)
 	parse_log += log

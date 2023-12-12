@@ -37,7 +37,7 @@ def get_crossref_article(doi):
 			},
 		},
 		"sameAs": doi,
-		"name": output["title"],
+		"name": output["title"][0],
 	}
 
 	author_list = []
