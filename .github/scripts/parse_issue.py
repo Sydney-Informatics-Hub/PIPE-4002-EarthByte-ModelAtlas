@@ -57,7 +57,7 @@ parse_log += "\n"
 parse_log += "**Model Repository Slug**\n"
 
 proposed_slug = data["-> slug"].strip()
-os.environ['ISSUE_NAME'] = proposed_slug
+os.environ['SLUG'] = proposed_slug
 cmd = "python3 .github/scripts/generate_identifier.py"
 try:
     slug = subprocess.check_output(cmd, shell=True, text=True, stderr=open(os.devnull)).strip()
@@ -123,7 +123,7 @@ description = data["-> description"].strip()
 
 if description == "_No response_":
     try:
-        title = publication_record['abstract']
+        description = publication_record['abstract']
         parse_log += "_Description taken from associated publication abstract_ \n"
     except:
         parse_log += "- Error: no descrition found, nor abstract for associated publication \n"
