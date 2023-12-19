@@ -86,7 +86,7 @@ parse_log += "**Associated Publication**\n"
 
 publication_doi = data["-> associated publication DOI"].strip()
 
-if publication == "_No response_":
+if publication_doi == "_No response_":
     parse_log += "No DOI provided. \n"
 else:
     try:
