@@ -34,6 +34,5 @@ def choice(name):
 
 
 if __name__ == "__main__":
-	issue_name = os.environ.get("ISSUE_NAME")
-	slug = issue_name.split(': ')[1].replace(" ","_")
+	slug = os.environ.get("SLUG")
 	print(choice(slug))
