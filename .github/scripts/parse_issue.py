@@ -49,7 +49,7 @@ if publication == "_No response_":
 else:
 	try:
 		publication_metadata = get_crossref_article(publication)
-		parse_log += f"Found publication _{publication_metadata['name']}_. \n"
+		parse_log += f"Found publication: _{publication_metadata['name']}_. \n"
 
 		author_list = publication_metadata["author"]
 		if "funder" in publication_metadata:
@@ -87,6 +87,7 @@ for author in author_list:
 		parse_log += f"- {author['givenName']} {author['familyName']}\n"
 parse_log += "\n"
 
+
 # Abstract
 parse_log += "**Abstract**\n"
 
@@ -99,7 +100,7 @@ if abstract == "_No response_":
 	else:
 		parse_log += "- Error: No abstract provided or found in publication. \n"
 
-parse_log += abstract + "\n"
+parse_log += abstract + "\n \n"
 
 
 # Identify funders
