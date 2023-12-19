@@ -59,6 +59,22 @@ def parse_author(metadata):
 
     return author_record, log
 
+def parse_organization(metadata):
+    log = ""
+    org_record = {}
+
+    try:
+       org_record = {
+           "@type": "Organization",
+           "@id": metadata["id"],
+           "name": metadata["name"],
+       }
+
+    except Exception as err:
+        log += "- Error: unable to parse organization metadata. \n"
+        log += f"`{err}`\n"
+
+    return org_record, log
 
 def get_crossref_article(doi):
 	'''
