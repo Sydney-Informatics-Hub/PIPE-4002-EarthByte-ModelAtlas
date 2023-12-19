@@ -12,6 +12,8 @@ base_urls = {
 }
 
 def get_record(record_type,record_id):
+	log = ""
+	metadata = {}
 
     assert (record_type in ["publication","software","organization","author"]), f"Record type `{record_type}` not supported"
 
@@ -24,11 +26,38 @@ def get_record(record_type,record_id):
 
         # Parse JSON response
         metadata = response.json()
-        return metadata
 
     except requests.exceptions.RequestException as e:
-        print(f"Error fetching metadata: {e}")
-        return None
+        log += f"- Error fetching metadata: {e} \n"
+
+    return metadata, log
+
+def parse_author(metadata):
+    log = ""
+    author_record = {}
+    
+    try:
+        author_record = {
+            "@type": "Person",
+            "@id": metadata["orcid-identifier"]["uri"],
+            "givenName": metadata['person']['name']['given-names']['value'],
+			"familyName": metadata['person']['name']['family-name']['value'],
+        }
+        
+        affiliation_list = []
+        for affiliation in metadata["activities-summary"]["employments"]["affiliation-group"]:
+            summary = affiliation["summaries"][0]["employment-summary"]
+            if summary["end-date"] is None:
+                affiliation_list.append({"@type": "Organization", "name": summary["organization"]["name"]})
+
+        if affiliation_list:
+            author_record["affiliation"] = affiliation_list
+
+    except Exception as err:
+        log += "- Error: unable to parse author metadata. \n"
+        log += f"`{err}`\n"
+
+    return author_record, log
 
 
 def get_crossref_article(doi):
