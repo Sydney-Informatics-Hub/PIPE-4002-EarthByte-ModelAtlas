@@ -87,7 +87,7 @@ def parse_software(metadata):
             "@id": metadata["doi_url"],
             "name": metadata["title"],
             "softwareVersion": metadata["metadata"]["version"]
-            # Other keywords to be corsswalked
+            # Other keywords to be crosswalked
         }
 
     except Exception as err:
