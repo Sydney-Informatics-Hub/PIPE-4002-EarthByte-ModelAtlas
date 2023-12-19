@@ -241,6 +241,16 @@ def get_crossref_article(doi):
 
     return metadata
 
+def is_orcid_format(author):
+
+    orcid_pattern = re.compile(r'\d{4}-\d{4}-\d{4}-\d{3}[0-9X]')
+
+    if orcid_pattern.fullmatch(author):
+        return True
+    else:
+        return False
+
+
 def get_authors(author_list):
     '''
     Parses a list of author names or ORCID iDs and returns a list of dictionaries of schema.org Person type
@@ -256,11 +266,11 @@ def get_authors(author_list):
 
     log = ""
 
-    orcid_id = os.environ.get("ORCID_ID")
-    orcid_pw = os.environ.get("ORCID_PW")
+    # orcid_id = os.environ.get("ORCID_ID")
+    # orcid_pw = os.environ.get("ORCID_PW")
 
     orcid_pattern = re.compile(r'\d{4}-\d{4}-\d{4}-\d{3}[0-9X]')
-    name_pattern = re.compile(r'([\w\.\-\u00C0-\u017F]+(?: [\w\.\-\u00C0-\u017F]+)*), ([\w\.\-\u00C0-\u017F]+(?: [\w\.\-\u00C0-\u017F]+)*)')
+    # name_pattern = re.compile(r'([\w\.\-\u00C0-\u017F]+(?: [\w\.\-\u00C0-\u017F]+)*), ([\w\.\-\u00C0-\u017F]+(?: [\w\.\-\u00C0-\u017F]+)*)')
 
     api = orcid.PublicAPI(orcid_id, orcid_pw, sandbox=False)
     search_token = api.get_search_token_from_orcid()
@@ -270,14 +280,12 @@ def get_authors(author_list):
     for author in author_list:
         if orcid_pattern.fullmatch(author):
             try:
-                record = api.read_record_public(author, 'record', search_token)
-                author_record = {
-                    "@type": "Person",
-                    "@id": record['orcid-identifier']['path'],
-                    "givenName": record['person']['name']['given-names']['value'],
-                    "familyName": record['person']['name']['family-name']['value'],
-                    }
-                authors.append(author_record)
+                record = get_record("author", author)
+                author_record, parse_log = parse_author(record)
+                if parse_log:
+                    log += parse_log
+                else:
+                    authors.append(author_record)
             except Exception as err:
                 log += "- Error: unable to find ORCID iD. Check you have entered it correctly. \n"
                 log += f"`{err}`\n"
