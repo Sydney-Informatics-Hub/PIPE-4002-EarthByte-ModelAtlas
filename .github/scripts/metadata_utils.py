@@ -76,6 +76,27 @@ def parse_organization(metadata):
 
     return org_record, log
 
+
+def parse_software(metadata):
+    log = ""
+    software_record = {}
+
+    try:
+        software_record = {
+            "@type": "SoftwareApplication", # and/or SoftwareSourceCode?
+            "@id": metadata["doi_url"],
+            "name": metadata["title"],
+            "softwareVersion": metadata["metadata"]["version"]
+            # Other keywords to be corsswalked
+        }
+
+    except Exception as err:
+        log += "- Error: unable to parse software metadata. \n"
+        log += f"`{err}`\n"
+
+    return software_record, log
+
+
 def get_crossref_article(doi):
 	'''
 	Returns metadata from Crossref for a given doi
