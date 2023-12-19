@@ -32,10 +32,10 @@ parse_log += '**Creator/Contributor**\n'
 creator = data["-> creator/contributor ORCID (or name)"].strip()
 
 if is_orcid_format(creator):
-    orcid_record = get_record("author", creator)
-    creator_record, log = parse_author(orcid_record)
-    if log:
-        parse_log += log
+    orcid_record,log1 = get_record("author", creator)
+    creator_record, log2 = parse_author(orcid_record)
+    if log1 or log2:
+        parse_log += log1 + log2
     else:
         parse_log += f"Creator/contributor is {creator_record['givenName']} {creator_record['familyName']} ({creator_record['@id']})\n"
 else:
@@ -90,14 +90,14 @@ if publication_doi == "_No response_":
     parse_log += "No DOI provided. \n"
 else:
     try:
-        publication_metadata = get_record("publication", publication_doi)
-        publication_record, log = parse_publication(publication_metadata)
-        if log:
-            parse_log += log
+        publication_metadata, log1 = get_record("publication", publication_doi)
+        publication_record, log2 = parse_publication(publication_metadata)
+        if log1 or log2:
+            parse_log += log1 + log2
         else:
             parse_log += f"Found publication: _{publication_record['name']}_. \n"
     except Exception as err:
-        parse_log += f"- Error: unable to obtain metadata for DOI {publication} \n"
+        parse_log += f"- Error: unable to obtain metadata for DOI {publication_doi} \n"
         parse_log += f"`{err}`\n"
 
 parse_log += "\n"
