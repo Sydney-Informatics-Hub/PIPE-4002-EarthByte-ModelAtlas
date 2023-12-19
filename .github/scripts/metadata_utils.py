@@ -96,6 +96,76 @@ def parse_software(metadata):
 
     return software_record, log
 
+def parse_publication(metadata):
+    log = ""
+    publication_record = {}
+
+    metadata = metadata['message']
+
+    try:
+        publication_record = {
+            "@type": "ScholarlyArticle",
+            "@id": metadata["URL"],
+            "isPartOf": {
+                "@type": "PublicationIssue",
+                "issueNumber": metadata["issue"],
+                "datePublished": '-'.join(map(str,metadata["published"]["date-parts"][0])),
+                "isPartOf": {
+                    "@type": [
+                        "PublicationVolume",
+                        "Periodical"
+                    ],
+                    "name": metadata["container-title"],
+                    "issn": metadata["ISSN"],
+                    "volumeNumber": metadata["volume"],
+                    "publisher": metadata["publisher"]
+                },
+            },
+            "name": metadata["title"][0],
+        }
+
+        author_list = []
+
+        for author in metadata["author"]:
+            author_record = {"@type": "Person"}
+            if "ORCID" in author:
+                author_record["@id"] = author["ORCID"]
+            author_record["givenName"] = author["given"]
+            author_record["familyName"] = author["family"]
+    
+            affiliation_list = []
+            for affiliation in author["affiliation"]:
+                affiliation_list.append({"@type": "Organization", "name": affiliation["name"]})
+                
+            if affiliation_list:
+                author_record["affiliation"] = affiliation_list
+    
+            author_list.append(author_record)
+
+        if author_list:
+            publication_record["author"] = author_list
+
+        if "abstract" in metadata:
+            publication_record["abstract"] = metadata["abstract"].split('<jats:p>')[1].split('</jats:p>')[0]
+    
+        if "page" in metadata:
+            publication_record["pagination"] = metadata["page"]
+    
+        if "alternative-id" in metadata:
+            publication_record["identifier"] = metadata["alternative-id"]
+    
+        if "funder" in metadata:
+            funder_list = []
+            for funder in metadata["funder"]:
+                funder_list.append({"@type": "Organization", "name": funder["name"]})
+            publication_record["funder"] = funder_list
+
+    except Exception as err:
+        log += "- Error: unable to parse publication metadata. \n"
+        log += f"`{err}`\n"
+
+    return publication_record, log
+
 
 def get_crossref_article(doi):
 	'''
