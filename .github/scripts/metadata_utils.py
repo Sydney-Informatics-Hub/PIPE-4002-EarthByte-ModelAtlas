@@ -2,6 +2,34 @@ import os
 import re
 from habanero import Crossref
 import orcid
+import requests
+
+base_urls = {
+    "publication": "https://api.crossref.org/works/",
+    "software": "https://zenodo.org/api/records/",
+    "organization": "https://api.ror.org/organizations/",
+    "author": "https://pub.orcid.org/v3.0/"
+}
+
+def get_record(record_type,record_id):
+
+    assert (record_type in ["publication","software","organization","author"]), f"Record type `{record_type}` not supported"
+
+    url = base_urls[record_type] + record_id
+    headers = {"Content-Type": "application/json"}
+
+    try:
+        response = requests.get(url, headers=headers)
+        response.raise_for_status()  # Raise an exception for HTTP errors
+
+        # Parse JSON response
+        metadata = response.json()
+        return metadata
+
+    except requests.exceptions.RequestException as e:
+        print(f"Error fetching metadata: {e}")
+        return None
+
 
 def get_crossref_article(doi):
 	'''
@@ -127,6 +155,6 @@ def get_authors(author_list):
 				}
 				authors.append(author_record)
 			except:
-				log += f"- Error: author name `{author}` in unexpected format. Excpected `last name(s), first name(s)`. \n"
+				log += f"- Error: author name `{author}` in unexpected format. Expected `last name(s), first name(s)`. \n"
 
 	return authors, log
