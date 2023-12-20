@@ -240,8 +240,6 @@ else:
         parse_log += f"Found software: _{software_record['name']}_. \n"
 parse_log += "\n"
 
-print(software_record)
-
 # Software Repository
 parse_log += "**Software Repository**\n"
 
@@ -306,7 +304,7 @@ parse_log += "**Software & algorithm keywords**\n"
 
 software_keywords = data["-> software & algorithm keywords"].strip().split(", ")
 if software_keywords[0] == "_No response_":
-    parse_log += "No keywords given"
+    parse_log += "No keywords given\n"
 else:
     software_record["keywords"] = software_keywords
     for keyword in software_keywords:
@@ -315,11 +313,11 @@ parse_log += "\n"
 
 
 # Computer URI/DOI
-parse_log += "Computer URI/DOI"
+parse_log += "**Computer URI/DOI**\n"
 
 computer_doi = data["-> computer URI/DOI"].strip()
 if computer_doi == "_No response_":
-    parse_log += "No URI/DOI given"
+    parse_log += "No URI/DOI given\n"
 else:
     parse_log += f"- {computer_doi} \n"
 parse_log += "\n"
