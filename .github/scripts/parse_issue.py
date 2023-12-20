@@ -164,7 +164,7 @@ authors = data['-> model authors'].strip().split('\r\n')
 
 if authors[0] == "_No response_":
     try:
-        author_list = publication_record['author']
+        author_list = publication_record["author"]
         parse_log += "_Author list taken from associated publication_ \n"
     except:
         parse_log += "- Error: no authors found \n"
@@ -186,9 +186,11 @@ parse_log += "\n"
 parse_log += "**Scientific keywords**\n"
 
 keywords = data["-> scientific keywords"].strip().split(", ")
-for keyword in keywords:
-    parse_log += f"- {keyword} \n"
-
+if keywords[0] == "_No response_":
+    parse_log += "No keywords given"
+else:
+    for keyword in keywords:
+        parse_log += f"- {keyword} \n"
 parse_log += "\n" 
 
 
@@ -220,6 +222,108 @@ parse_log += "\n"
 #############
 # Section 3
 #############
+
+# Software Framework DOI
+parse_log += "**Software Framework DOI/URI**\n"
+
+software_doi = data["-> software framework DOI/URI"].strip()
+
+if software_doi == "_No response_":
+    parse_log += "No DOI/URI provided. \n"
+    software_record={"@type": "SoftwareApplication"}
+else:
+    software_metadata, log1 = get_record("software", software_doi)
+    software_record, log2 = parse_software(software_metadata)
+    if log1 or log2:
+        parse_log += log1 + log2
+    else:
+        parse_log += f"Found software: _{software_record['name']}_. \n"
+parse_log += "\n"
+
+
+# Software Repository
+parse_log += "**Software Repository**\n"
+
+software_repo = data["-> software framework source repository"].strip()
+
+if software_repo == "_No response_":
+    parse_log += "No repository URL provided. \n"
+else:
+    software_record["codeRepository"] = software_repo
+    parse_log += software_repo + "\n"
+parse_log += "\n"
+
+
+# Software Name
+parse_log += "**Software Name**\n"
+
+software_name = data["-> name of primary software framework (e.g. Underworld, ASPECT, Badlands, OpenFOAM)"].strip()
+
+if software_name == "_No response_":
+    try:
+        software_name = software_record['name']
+        parse_log += "_Name taken from DOI record_ \n"
+    except:
+        parse_log += "- Error: no software name found \n"
+else:
+    software_record["name"] = software_name
+
+parse_log += software_name + "\n \n"
+
+
+# Software Authors
+parse_log += "**Software Framework Authors**\n"
+
+authors = data['-> software framework authors'].strip().split('\r\n')
+
+if authors[0] == "_No response_":
+    try:
+        software_author_list = software_record["author"]
+        parse_log += "_Author list taken from software DOI record_ \n"
+    except:
+        parse_log += "- Error: no authors found \n"
+else:
+    software_author_list, log = get_authors(authors)
+    software_record["author"] = software_author_list
+    parse_log += log
+
+parse_log += "\n"
+parse_log += "The following author(s) were found successfully:\n"
+for author in software_author_list:
+    if "givenName" in author:
+        parse_log += f"- {author['givenName']} {author['familyName']} "
+    elif "name" in author:
+        parse_log += f"- {author['name']} "
+    if "@id" in author:
+        parse_log += f"({author['@id']})\n"
+    parse_log += "\n"
+parse_log += "\n"
+
+
+# Software Keywords
+parse_log += "**Software & algorithm keywords**\n"
+
+software_keywords = data["-> software & algorithm keywords"].strip().split(", ")
+if software_keywords[0] == "_No response_":
+    parse_log += "No keywords given"
+else:
+    software_record["keywords"] = software_keywords
+    for keyword in software_keywords:
+        parse_log += f"- {keyword} \n"
+parse_log += "\n"
+
+
+# Computer URI/DOI
+parse_log += "Computer URI/DOI"
+
+computer_doi = data["-> computer URI/DOI"].strip()
+if computer_doi == "_No response_":
+    parse_log += "No URI/DOI given"
+else:
+    parse_log += f"- {computer_doi} \n"
+parse_log += "\n"
+
+
 
 #############
 # Section 4
