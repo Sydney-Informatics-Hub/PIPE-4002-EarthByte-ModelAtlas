@@ -4,7 +4,7 @@ import requests
 import subprocess
 from github import Github, Auth
 
-from metadata_utils import get_authors, is_orcid_format, get_record, parse_author, parse_publication, get_funders, parse_image_and_caption
+from metadata_utils import get_authors, is_orcid_format, get_record, parse_author, parse_publication, parse_software, get_funders, parse_image_and_caption
 
 token = os.environ.get("GITHUB_TOKEN")
 issue_number = int(os.environ.get("ISSUE_NUMBER"))
