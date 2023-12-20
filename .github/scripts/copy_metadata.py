@@ -245,7 +245,7 @@ website_metadata["model_description"] = model_description
 
 
 # Move files to repo
-model_repo.create_file(".metadata/mate.json","add "+filename,metadata)
-model_repo.create_file("website_files/website_metadata.json","add "+filename,metadata)
+model_repo.create_file(".metadata/mate.json","add mate.json",metadata)
+model_repo.create_file("website_files/website_metadata.json","add website_metadata.json",website_metadata)
 
 issue.create_comment(f"Model repository created at https://github.com/{model_owner}/{model_repo_name}")
