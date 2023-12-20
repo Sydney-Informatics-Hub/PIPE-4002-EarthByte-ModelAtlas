@@ -12,6 +12,21 @@ base_urls = {
     "author": "https://pub.orcid.org/v3.0/"
 }
 
+# Hack to suport SVG files
+# Need to tidy this up, and are there any other files that filetype doesn't natively recognise?
+class Svg(filetype.Type):
+    MIME = 'image/svg+xml'
+    EXTENSION = 'svg'
+
+    def __init__(self):
+        super(Svg, self).__init__(
+            mime = Svg.MIME,
+            extension = Svg.EXTENSION
+            )
+
+    def match(self, buf):
+        return False
+
 def get_record(record_type,record_id):
     log = ""
     metadata = {}
@@ -389,6 +404,9 @@ def parse_image_and_caption(string):
     image_record = {}
     
     regex = r"\[(?P<filename>.*?)\]\((?P<url>.*?)\)"
+
+    # Hack to recognise SVG files
+    filetype.add_type(Svg())
 
     try:
         image_record = re.search(regex, string).groupdict()
