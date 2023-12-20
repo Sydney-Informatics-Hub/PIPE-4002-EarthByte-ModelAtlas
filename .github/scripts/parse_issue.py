@@ -240,6 +240,7 @@ else:
         parse_log += f"Found software: _{software_record['name']}_. \n"
 parse_log += "\n"
 
+print(software_record)
 
 # Software Repository
 parse_log += "**Software Repository**\n"
@@ -295,7 +296,7 @@ for author in software_author_list:
     elif "name" in author:
         parse_log += f"- {author['name']} "
     if "@id" in author:
-        parse_log += f"({author['@id']})\n"
+        parse_log += f"({author['@id']})"
     parse_log += "\n"
 parse_log += "\n"
 
