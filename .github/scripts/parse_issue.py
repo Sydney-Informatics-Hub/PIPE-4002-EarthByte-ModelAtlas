@@ -226,7 +226,7 @@ parse_log += "\n"
 # Software Framework DOI
 parse_log += "**Software Framework DOI/URI**\n"
 
-software_doi = data["-> software framework DOI/URI"].strip()
+software_doi = data["-> software framework DOI/URI"].strip().split("zenodo.")[1]
 
 if software_doi == "_No response_":
     parse_log += "No DOI/URI provided. \n"
