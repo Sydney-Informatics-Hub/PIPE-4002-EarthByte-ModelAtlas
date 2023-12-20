@@ -196,7 +196,7 @@ parse_log += "\n"
 # Identify funders
 parse_log += "**Funder**\n"
 
-funders = data['-> funder'].strip().split('\r\n')
+funders = data["-> funder"].strip().split("\r\n")
 
 if funders[0] == "_No response_":
     try:
@@ -222,51 +222,69 @@ parse_log += "\n"
 # Section 3
 #############
 
-# Identify uploaded files
-parse_log += "**File Manifest**\n"
-parse_log += "The files listed in the table below require descriptions. Please edit this comment to insert them into the table. \n"
-parse_log += "\n"
-parse_log += "Filename | File Description \n"
-parse_log += "---|--- \n"
+#############
+# Section 4
+#############
 
-regex = r"\[(?P<filename>.*?)\]\((?P<url>.*?)\)"
-file_matches = re.findall(regex, issue.body)
+# Landing page image and caption
+parse_log += "**Landing page image**\n"
 
-# Hack to recognise SVG files
-# Need to tidy this up, and are there any other files that filetype doesn't natively recognise?
-class Svg(filetype.Type):
-    MIME = 'image/svg+xml'
-    EXTENSION = 'svg'
+img_string = data["-> add landing page image and caption"].strip()
 
-    def __init__(self):
-        super(Svg, self).__init__(
-            mime = Svg.MIME,
-            extension = Svg.EXTENSION
-            )
+if img_string == "_No response_":
+    parse_log += "No image uploaded.\n"
+else:
+    landing_image_record, log = parse_image_and_caption(img_string)
+    parse_log += f"Filename: {landing_image_record['filename']}\n"
+    parse_log += f"Caption: {landing_image_record['caption']}"
 
-    def match(self, buf):
-        return False
 
-filetype.add_type(Svg())
+# Animation
+parse_log += "**Animation**\n"
 
-filenames = []
-# Download files and move them to the correct location in the repo
-for filename, url in file_matches:
-    response = requests.get(url)
+img_string = data["-> add an animation (if relevant)"].strip()
 
-    # Image file extensions are left out, infer what they should be
-    if response.headers.get('Content-Type')[0:5] == 'image':
-        filename += '.'+filetype.get_type(mime=response.headers.get('Content-Type')).extension
+if img_string == "_No response_":
+    parse_log += "No image uploaded.\n"
+else:
+    animation_record, log = parse_image_and_caption(img_string)
+    parse_log += f"Filename: {animation_record['filename']}\n"
+    parse_log += f"Caption: {animation_record['caption']}"
 
-    # repo.create_file("pages/models/"+slug+"/"+filename,"add "+filename,response.content)
-    parse_log += filename + " | \n"
-    filenames.append(filename)
 
-# Test making a comment - could this be edited later for the uploader to give file descriptions?
+# Graphic abstract
+parse_log += "**Graphic abstract**\n"
+
+img_string = data["-> add a graphic abstract figure (if relevant)"].strip()
+
+if img_string == "_No response_":
+    parse_log += "No image uploaded.\n"
+else:
+    graphic_abstract_record, log = parse_image_and_caption(img_string)
+    parse_log += f"Filename: {graphic_abstract_record['filename']}\n"
+    parse_log += f"Caption: {graphic_abstract_record['caption']}"
+
+
+# Model setup figure
+parse_log += "**Model setup figure**\n"
+
+img_string = data["-> add a model setup figure (if relevant)"].strip()
+
+if img_string == "_No response_":
+    parse_log += "No image uploaded.\n"
+else:
+    model_setup_fig_record, log = parse_image_and_caption(img_string)
+    parse_log += f"Filename: {model_setup_fig_record['filename']}\n"
+    parse_log += f"Caption: {model_setup_fig_record['caption']}"
+
+# Model setup description
+parse_log += "**Model setup description**\n"
+
+model_description = data["-> add a description of your model setup"].strip()
+parse_log += model_description
+
 
 parse_log += "\n"
 parse_log += "When you have finished adding file descriptions and fixing any identified errors, please add a 'Review Requested' label to this issue."
 
 issue.create_comment(parse_log)
-
-print(issue.body)
