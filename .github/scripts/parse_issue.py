@@ -58,7 +58,6 @@ parse_log += "\n"
 parse_log += "**Model Repository Slug**\n"
 
 proposed_slug = data["-> slug"].strip()
-os.environ['SLUG'] = proposed_slug
 cmd = "python3 .github/scripts/generate_identifier.py"
 try:
     slug = subprocess.check_output(cmd, shell=True, text=True, stderr=open(os.devnull)).strip()

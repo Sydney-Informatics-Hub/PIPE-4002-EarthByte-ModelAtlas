@@ -34,5 +34,19 @@ def choice(name):
 
 
 if __name__ == "__main__":
-	slug = os.environ.get("SLUG")
+	token = os.environ.get("GITHUB_TOKEN")
+	issue_number = int(os.environ.get("ISSUE_NUMBER"))
+
+	# Get issue
+	auth = Auth.Token(token)
+	g = Github(auth=auth)
+	repo = g.get_repo("hvidy/PIPE-4002-EarthByte-ModelAtlas")
+	issue = repo.get_issue(number = issue_number)
+
+	# Parse issue body
+	# Identify headings and subsequent text
+	regex = r"### *(?P<key>.*?)\s*[\r\n]+(?P<value>[\s\S]*?)(?=###|$)"
+	data = dict(re.findall(regex, issue.body))
+
+	slug = data["-> slug"].strip()
 	print(choice(slug))
