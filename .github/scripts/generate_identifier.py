@@ -1,6 +1,7 @@
 import json
 import subprocess
 import os
+from github import Github, Auth
 
 def run_command_check_output(cmd):
 	return subprocess.check_output(cmd, shell=True, stderr=open(os.devnull))
