@@ -1,0 +1,78 @@
+{
+  "@context": {
+    "codemeta": "https://codemeta.github.io/terms/",
+    "schema": "http://schema.org",
+    "owl": "http://www.w3.org/2002/07/owl#"},
+      "name": "test_model_2023",
+      "@id": "http://example.org/work/1",
+      "@type": "CreativeWork",
+      "name": "",
+      "creator": "",
+      "description": "",
+      "keywords": "",
+      "about": "",
+      "license": "",
+      "status": "",
+      "productionFrequency": "",
+      "publisher": "",
+      "funder": "",
+      "author": "",
+      "creditedTo": "",
+  "citation":     {
+      "@id": "http://example.org/publication/1",
+      "@type": "Publication",
+      "name": "Research Paper on Creative Work",
+      "owl:sameAs": []
+    },
+  
+  "hasPart": [
+  
+    {
+      "@id": "http://example.org/dataset/1",
+      "@type": "Dataset",
+      "name": "output data for model",
+      "creator": "",
+      "author": "",
+      "Dataset version": "",
+      "Temporal extents": "",
+      "Spatial extents": "",
+      "Dataset lineage information": "",
+      "Dataset format": "",
+      "Dataset status": "",
+      "measurementMethod": "",
+      "fileFormat": "",
+      "owl:sameAs": [],
+      "distribution": ""
+    },
+
+    {
+      "@id": "http://example.org/software/1",
+      "@type": ["SoftwareSourceCode", "SoftwareApplication", "codemeta:SoftwareSourceCode", "Dataset"],
+      "name": "Code and inputs for Creative Work",
+      "creator": "",
+      "author": "",
+      "codeRepository": "",
+      "programmingLanguage": "",
+      "owl:sameAs": [],
+      "keywords": "",
+      "runtimePlatform":"",
+      "memoryRequirements":"",
+      "processorRequirements":"",
+      "storageRequirements": "",
+      "targetProduct":     {
+        "@id": "http://example.org/software/1",
+        "@type": ["SoftwareSourceCode", "SoftwareApplication", "codemeta:SoftwareSourceCode"],
+        "name": "Software framework to run you model",
+        "funder": "",
+        "referencePublication": "",
+        "buildInstructions":"",
+        "applicationCategory":"",
+        "license": "",
+        "softwareRequirements": "",
+        "owl:sameAs": []
+                          }
+    }
+
+
+             ]
+}
