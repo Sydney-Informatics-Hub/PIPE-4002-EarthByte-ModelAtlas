@@ -25,7 +25,7 @@ model_repo = g.get_repo(f"{model_owner}/{model_repo_name}")
 
 
 # Get metadata template
-metadata_template_path = 'metadata_V2.json'
+metadata_template_path = '.github/scripts/metadata_V2.json'
 
 with open(metadata_template_path, 'r') as json_file:
     # Load the JSON data from the file
