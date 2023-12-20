@@ -113,7 +113,7 @@ def parse_software(metadata):
             author_list.append(author_record)
 
         if author_list:
-            publication_record["author"] = author_list
+            software_record["author"] = author_list
 
 
     except Exception as err:
