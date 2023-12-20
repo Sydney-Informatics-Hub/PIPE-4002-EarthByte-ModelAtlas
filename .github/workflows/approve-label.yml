@@ -68,13 +68,24 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.PAT }}
           OWNER: hvidy
-          ISSUE_NAME: ${{ github.event.issue.title }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
           TEMPLATE: hvidy/mate_template
           FLAGS: --public
         run: |
           REPO_NAME=$(python3 .github/scripts/generate_identifier.py)
           gh repo create ${OWNER}/${REPO_NAME} --template $TEMPLATE $FLAGS
           echo "repo_name=${REPO_NAME}" >> $GITHUB_OUTPUT
+
+      # parse metadata and copy to repo
+      - name: copy metadata
+        id: copy-metadata
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT }}
+          OWNER: hvidy
+          REPO: ${{ steps.create-model-repo.outputs.repo_name }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          python3 .github/scripts/copy_metadata.py
 
       # copy files to the new repo
       - name: copy files
