@@ -5,7 +5,7 @@ import requests
 import subprocess
 from github import Github, Auth
 
-from metadata_utils import get_crossref_article, get_authors, is_orcid_format, get_record, parse_author, parse_publication
+from metadata_utils import get_authors, is_orcid_format, get_record, parse_author, parse_publication, get_funders
 
 token = os.environ.get("GITHUB_TOKEN")
 issue_number = int(os.environ.get("ISSUE_NUMBER"))
@@ -22,9 +22,11 @@ issue = repo.get_issue(number = issue_number)
 # Parse issue body
 # Identify headings and subsequent text
 regex = r"### *(?P<key>.*?)\s*[\r\n]+(?P<value>[\s\S]*?)(?=###|$)"
-
 data = dict(re.findall(regex, issue.body))
 
+#############
+# Section 1
+#############
 
 # Creator/contributor
 parse_log += '**Creator/Contributor**\n'
@@ -72,14 +74,39 @@ except Exception as err:
 
 parse_log += "\n"
 
+
 # FoR codes
-# TBD
+parse_log += "**Field of Research (FoR) Codes**\n"
+
+for_codes = data["-> field of Research (FoR) Codes"].strip().split(", ")
+
+about_record = []
+for for_code in for_codes:
+    id = "#FoR_"+for_code.split(":")[0]
+    about_record.append({"@id": id, "@type": "DefinedTerm", "name": for_code})
+    parse_log += for_code + "\n"
+
+parse_log += "\n"
+
 
 # License
-# TBD
+parse_log += "**License**\n"
+
+license = data["-> license"].strip()
+parse_log += license + "\n"
+
+parse_log += "\n"
+
 
 # Model category
-# TBD
+parse_log += "**Model category**\n"
+
+model_categories = data["-> model category"].strip().split(", ")
+for model_category in model_categories:
+    parse_log += f"- {model_category} \n"
+
+parse_log += "\n" 
+
 
 # Associated Publication
 parse_log += "**Associated Publication**\n"
@@ -157,7 +184,14 @@ parse_log += "\n"
 
 
 # Scientific Keywords
-# TBD
+parse_log += "**Scientific keywords**\n"
+
+keywords = data["-> scientific keywords"].strip().split(", ")
+for keyword in keywords:
+    parse_log += f"- {keyword} \n"
+
+parse_log += "\n" 
+
 
 # Identify funders
 parse_log += "**Funder**\n"
@@ -166,22 +200,27 @@ funders = data['-> funder'].strip().split('\r\n')
 
 if funders[0] == "_No response_":
     try:
-        funders = publication_record['funder']
+        funder_list = publication_record['funder']
         parse_log += "_Funder list taken from associated publication_ \n"
     except:
         parse_log += "- Warning: No funders provided or found in publication. \n"
 else:
-    print("Still need to code this bit")
-    funders = []
-    # for funder in funders:
-    #   funder_list.append({"@type": "Organization", "name": funder})
+    funder_list, log = get_funders(funders)
+    parse_log += log
 
 parse_log += "\n"
 parse_log += "The following funder(s) were found successfully:\n"
-for funder in funders:
+for funder in funder_list:
     parse_log += f"- {funder['name']} \n"
 parse_log += "\n"
 
+#############
+# Section 2
+#############
+
+#############
+# Section 3
+#############
 
 # Identify uploaded files
 parse_log += "**File Manifest**\n"
