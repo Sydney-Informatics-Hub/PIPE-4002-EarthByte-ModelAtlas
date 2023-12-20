@@ -362,3 +362,23 @@ def get_funders(funder_list):
 
     return funders, log
 
+
+def parse_image_and_caption(string):
+    log = ""
+    image_record = {}
+    
+    regex = r"\[(?P<filename>.*?)\]\((?P<url>.*?)\)"
+
+    try:
+        image_record = re.search(regex, string).groupdict()
+
+        # get image type
+        response = requests.get(image_record["url"])
+        extension = filetype.get_type(mime=response.headers.get("Content-Type")).extension
+        image_record["filename"] += "." + extension
+        
+        image_record["caption"] = string.split("\r\n")[-1]
+    except:
+        log += "Could not parse image file and caption"
+
+    return image_record, log
