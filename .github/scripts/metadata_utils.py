@@ -3,6 +3,7 @@ import re
 from habanero import Crossref
 import orcid
 import requests
+import filetype
 
 base_urls = {
     "publication": "https://api.crossref.org/works/",
