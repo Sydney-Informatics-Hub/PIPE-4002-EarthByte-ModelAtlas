@@ -39,6 +39,7 @@ class Svg(filetype.Type):
 
 filetype.add_type(Svg())
 
+
 filenames = []
 # Download files and move them to the correct location in the repo
 for filename, url in file_matches:
@@ -48,6 +49,6 @@ for filename, url in file_matches:
 	if response.headers.get('Content-Type')[0:5] == 'image':
 		filename += '.'+filetype.get_type(mime=response.headers.get('Content-Type')).extension
 
-	model_repo.create_file("model_files/"+filename,"add "+filename,response.content)
+	model_repo.create_file("website_files/"+filename,"add "+filename,response.content)
 	# parse_log += filename + " | \n"
 	# filenames.append(filename)
