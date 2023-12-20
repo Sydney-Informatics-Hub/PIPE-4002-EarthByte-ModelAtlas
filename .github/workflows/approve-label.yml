@@ -60,7 +60,7 @@ jobs:
         run: |
           source activate
           conda init
-          conda install -c conda-forge pygithub filetype
+          conda install -c conda-forge pygithub filetype orcid habanero
 
       # create the model repo from the template
       - name: create model repo
