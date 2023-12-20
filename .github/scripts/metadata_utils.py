@@ -93,22 +93,22 @@ def parse_software(metadata):
 
         author_list = []
 
-        for author in metadata["creators"]:
+        for author in metadata["metadata"]["creators"]:
             author_record = {"@type": "Person"}
             if "orcid" in author:
-                author_record["@id"] = author["ORCID"]
+                author_record["@id"] = author["orcid"]
             if "givenName" in author:
                 author_record["givenName"] = author["given"]
                 author_record["familyName"] = author["family"]
             elif "name" in author:
                 author_record["name"] = author["name"]
     
-            if affiliation in author:
-                affiliation_list = []
-                for affiliation in author["affiliation"]:
-                    affiliation_list.append({"@type": "Organization", "name": affiliation})
-                
-                author_record["affiliation"] = affiliation_list
+
+            affiliation_list = []
+            for affiliation in author["affiliation"]:
+                affiliation_list.append({"@type": "Organization", "name": affiliation})
+            
+            author_record["affiliation"] = affiliation_list
     
             author_list.append(author_record)
 
