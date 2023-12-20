@@ -294,3 +294,71 @@ def get_authors(author_list):
                 log += f"- Error: author name `{author}` in unexpected format. Expected `last name(s), first name(s)`. \n"
 
     return authors, log
+
+def search_organization(org_url):
+    log = ""
+    ror_id = ""
+    result = {}
+    
+    base_url = "https://api.ror.org/organizations"
+    org_url = org_url.split("://")[-1]
+
+    #Check if last character is a '/' and if so drop it
+    if org_url[-1] == "/": org_url = org_url[:-1]
+
+    url = base_url + '?query.advanced=links:' + org_url
+    headers = {"Content-Type": "application/json"}
+
+    try:
+        response = requests.get(url, headers=headers)
+        response.raise_for_status()  # Raise an exception for HTTP errors
+
+        result = response.json()
+
+    except requests.exceptions.RequestException as e:
+        log += f"- Error fetching metadata: {e} \n"
+
+    # Deal with response and determine ROR ID
+    if result["number_of_results"] == 0:
+        log += f"- Unable to find ROR for {org_url} \n"
+    elif result["number_of_results"] == 1:
+        ror_id = result["items"][0]["id"]
+        log += f"- Found ROR record for {org_url}: {result['items'][0]['name']} ({ror_id}) \n"
+        for relation in result["items"][0]["relationships"]:
+            if relation["type"] == "Parent":
+                log += f"Note: This organization has a parent organization: {relation['label']} ({relation['id']}) \n"
+    else:
+        ror_id = result["items"][0]["id"]
+        log += f"- Found more than one ROR record for {org_url}. Assuming the first result is correct; if not please enter the correct ROR. \n"
+        for record in result["items"]:
+            log += f"\t - {record['name']} ({record['id']}) \n"
+
+    return ror_id, log
+
+
+
+def get_funders(funder_list):
+
+    log = ""
+    funders = []
+
+    for funder in funder_list:
+        if "ror.org" not in funder:
+            ror_id, get_log = search_organization(funder)
+            log += get_log
+
+            if not ror_id:
+                funders.append({"@type": "Organization", "name": funder, "url": funder})
+            else:
+                funder = ror_id
+
+        if "ror.org" in funder:
+            record, get_log = get_record("organization", funder)
+            funder_record, parse_log = parse_organization(record)
+            if get_log or parse_log:
+                log += get_log + parse_log
+            else:
+                funders.append(funder_record)
+
+    return funders, log
+
