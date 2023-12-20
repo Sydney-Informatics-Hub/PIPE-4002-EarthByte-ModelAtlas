@@ -91,6 +91,31 @@ def parse_software(metadata):
             # Other keywords to be crosswalked
         }
 
+        author_list = []
+
+        for author in metadata["creators"]:
+            author_record = {"@type": "Person"}
+            if "orcid" in author:
+                author_record["@id"] = author["ORCID"]
+            if "givenName" in author:
+                author_record["givenName"] = author["given"]
+                author_record["familyName"] = author["family"]
+            elif "name" in author:
+                author_record["name"] = author["name"]
+    
+            if affiliation in author:
+                affiliation_list = []
+                for affiliation in author["affiliation"]:
+                    affiliation_list.append({"@type": "Organization", "name": affiliation})
+                
+                author_record["affiliation"] = affiliation_list
+    
+            author_list.append(author_record)
+
+        if author_list:
+            publication_record["author"] = author_list
+
+
     except Exception as err:
         log += "- Error: unable to parse software metadata. \n"
         log += f"`{err}`\n"
