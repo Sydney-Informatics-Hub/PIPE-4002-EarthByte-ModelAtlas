@@ -215,28 +215,28 @@ website_metadata = {}
 img_string = data["-> add landing page image and caption"].strip()
 
 if img_string != "_No response_":
-    landing_image_record, log = parse_image_and_caption(img_string)
+    landing_image_record, log = parse_image_and_caption(img_string, "landing_image")
     website_metadata["landing_image"] = landing_image_record
 
 # Animation
 img_string = data["-> add an animation (if relevant)"].strip()
 
 if img_string != "_No response_":
-    animation_record, log = parse_image_and_caption(img_string)
+    animation_record, log = parse_image_and_caption(img_string, "animation")
     website_metadata["animation"] = animation_record
 
 # Graphic abstract
 img_string = data["-> add a graphic abstract figure (if relevant)"].strip()
 
 if img_string != "_No response_":
-    graphic_abstract_record, log = parse_image_and_caption(img_string)
+    graphic_abstract_record, log = parse_image_and_caption(img_string, "graphic_abstract")
     website_metadata["graphic_abstract"] = graphic_abstract_record
 
 # Model setup figure
 img_string = data["-> add a model setup figure (if relevant)"].strip()
 
 if img_string != "_No response_":
-    model_setup_fig_record, log = parse_image_and_caption(img_string)
+    model_setup_fig_record, log = parse_image_and_caption(img_string, "model_setup_figure")
     website_metadata["model_setup_figure"] = model_setup_fig_record
 
 # Model setup description
