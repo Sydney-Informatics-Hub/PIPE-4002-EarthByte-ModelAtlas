@@ -341,9 +341,13 @@ img_string = data["-> add landing page image and caption"].strip()
 if img_string == "_No response_":
     parse_log += "No image uploaded.\n\n"
 else:
-    landing_image_record, log = parse_image_and_caption(img_string)
-    parse_log += f"Filename: {landing_image_record['filename']}\n"
-    parse_log += f"Caption: {landing_image_record['caption']}\n\n"
+    landing_image_record, log = parse_image_and_caption(img_string, "landing_image")
+    if log:
+        parse_log += log
+    if "filename" in landing_image_record:
+        parse_log += f"Filename: {landing_image_record['filename']}\n"
+    if "caption" in landing_image_record:
+        parse_log += f"Caption: {landing_image_record['caption']}\n\n"
 
 
 # Animation
@@ -354,9 +358,13 @@ img_string = data["-> add an animation (if relevant)"].strip()
 if img_string == "_No response_":
     parse_log += "No image uploaded.\n\n"
 else:
-    animation_record, log = parse_image_and_caption(img_string)
-    parse_log += f"Filename: {animation_record['filename']}\n"
-    parse_log += f"Caption: {animation_record['caption']}\n\n"
+    animation_record, log = parse_image_and_caption(img_string, "animation")
+    if log:
+        parse_log += log
+    if "filename" in animation_record:
+        parse_log += f"Filename: {animation_record['filename']}\n"
+    if "caption" in animation_record:
+        parse_log += f"Caption: {animation_record['caption']}\n\n"
 
 
 # Graphic abstract
@@ -367,9 +375,13 @@ img_string = data["-> add a graphic abstract figure (if relevant)"].strip()
 if img_string == "_No response_":
     parse_log += "No image uploaded.\n\n"
 else:
-    graphic_abstract_record, log = parse_image_and_caption(img_string)
-    parse_log += f"Filename: {graphic_abstract_record['filename']}\n"
-    parse_log += f"Caption: {graphic_abstract_record['caption']}\n\n"
+    graphic_abstract_record, log = parse_image_and_caption(img_string, "graphic_abstract")
+    if log:
+        parse_log += log
+    if "filename" in graphic_abstract_record:
+        parse_log += f"Filename: {graphic_abstract_record['filename']}\n"
+    if "caption" in graphic_abstract_record:
+        parse_log += f"Caption: {graphic_abstract_record['caption']}\n\n"
 
 
 # Model setup figure
@@ -380,9 +392,13 @@ img_string = data["-> add a model setup figure (if relevant)"].strip()
 if img_string == "_No response_":
     parse_log += "No image uploaded.\n\n"
 else:
-    model_setup_fig_record, log = parse_image_and_caption(img_string)
-    parse_log += f"Filename: {model_setup_fig_record['filename']}\n"
-    parse_log += f"Caption: {model_setup_fig_record['caption']}\n\n"
+    model_setup_fig_record, log = parse_image_and_caption(img_string, "model_setup")
+    if log:
+        parse_log += log
+    if "filename" in model_setup_fig_record:
+        parse_log += f"Filename: {model_setup_fig_record['filename']}\n"
+    if "caption" in model_setup_fig_record:
+        parse_log += f"Caption: {model_setup_fig_record['caption']}\n\n"
 
 # Model setup description
 parse_log += "**Model setup description**\n"
