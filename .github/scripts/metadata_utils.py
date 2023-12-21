@@ -430,7 +430,7 @@ def parse_image_and_caption(img_string, default_filename):
                 elif "src" in string:
                     image_record = re.search(html_regex, string).groupdict()
                 else:
-                    log += "Could not parse image file and caption"
+                    log += "Could not parse image file and caption\n"
         else:
             caption.append(string)
 
@@ -444,6 +444,6 @@ def parse_image_and_caption(img_string, default_filename):
     image_record["caption"] = "\n".join(caption)
 
     if not caption:
-        log += "- Error: No caption found for image."
+        log += "- Error: No caption found for image.\n"
 
     return image_record, log
