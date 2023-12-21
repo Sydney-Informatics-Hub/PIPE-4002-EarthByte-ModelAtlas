@@ -137,6 +137,7 @@ if title == "_No response_":
         title = publication_record['name']
         parse_log += "_Title taken from associated publication_ \n"
     except:
+        title = ""
         parse_log += "- Error: no title found \n"
 
 parse_log += title + "\n \n"
@@ -151,6 +152,7 @@ if description == "_No response_":
         description = publication_record['abstract']
         parse_log += "_Description taken from associated publication abstract_ \n"
     except:
+        description = ""
         parse_log += "- Error: no descrition found, nor abstract for associated publication \n"
 
 parse_log += description + "\n \n"
@@ -166,6 +168,7 @@ if authors[0] == "_No response_":
         author_list = publication_record["author"]
         parse_log += "_Author list taken from associated publication_ \n"
     except:
+        author_list = []
         parse_log += "- Error: no authors found \n"
 else:
     author_list, log = get_authors(authors)
@@ -203,6 +206,7 @@ if funders[0] == "_No response_":
         funder_list = publication_record['funder']
         parse_log += "_Funder list taken from associated publication_ \n"
     except:
+        funder_list = []
         parse_log += "- Warning: No funders provided or found in publication. \n"
 else:
     funder_list, log = get_funders(funders)
@@ -262,6 +266,7 @@ if software_name == "_No response_":
         software_name = software_record['name']
         parse_log += "_Name taken from DOI record_ \n"
     except:
+        software_name = ""
         parse_log += "- Error: no software name found \n"
 else:
     software_record["name"] = software_name
@@ -279,6 +284,7 @@ if authors[0] == "_No response_":
         software_author_list = software_record["author"]
         parse_log += "_Author list taken from software DOI record_ \n"
     except:
+        software_author_list = []
         parse_log += "- Error: no authors found \n"
 else:
     software_author_list, log = get_authors(authors)
