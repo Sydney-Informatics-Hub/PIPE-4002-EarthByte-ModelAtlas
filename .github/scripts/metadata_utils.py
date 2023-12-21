@@ -142,7 +142,11 @@ def parse_publication(metadata):
         publication_record = {
             "@type": "ScholarlyArticle",
             "@id": metadata["URL"],
-            "isPartOf": {
+            "name": metadata["title"][0],
+            }
+
+        if "issue" in metadata:
+            publication_issue = {
                 "@type": "PublicationIssue",
                 "issueNumber": metadata["issue"],
                 "datePublished": '-'.join(map(str,metadata["published"]["date-parts"][0])),
@@ -157,8 +161,13 @@ def parse_publication(metadata):
                     "publisher": metadata["publisher"]
                 },
             },
-            "name": metadata["title"][0],
-        }
+
+            publication_record["isPartOf"] = publication_issue
+        else:
+            if metadata["published"]:
+                publication_record["datePublished"] = '-'.join(map(str,metadata["published"]["date-parts"][0]))
+            if metadata["publisher"]:
+                publication_record["publisher"] = metadata["publisher"]
 
         author_list = []
 
@@ -399,25 +408,42 @@ def get_funders(funder_list):
     return funders, log
 
 
-def parse_image_and_caption(string):
+def parse_image_and_caption(img_string, default_filename):
     log = ""
     image_record = {}
     
-    regex = r"\[(?P<filename>.*?)\]\((?P<url>.*?)\)"
+    md_regex = r"\[(?P<filename>.*?)\]\((?P<url>.*?)\)"
+    html_regex = r'alt="(?P<filename>[^"]+)" src="(?P<url>[^"]+)"'
 
     # Hack to recognise SVG files
     filetype.add_type(Svg())
 
-    try:
-        image_record = re.search(regex, string).groupdict()
+    caption = []
 
-        # get image type
+    for string in img_string.split("\r\n"):
+        if "https://" in string:
+            try:
+                image_record = re.search(md_regex, string).groupdict()
+            except:
+                if string.startswith("https://"):
+                    image_record = {"filename": default_filename, "url": string}
+                elif "src" in string:
+                    image_record = re.search(html_regex, string).groupdict()
+                else:
+                    log += "Could not parse image file and caption"
+        else:
+            caption.append(string)
+
+    # Get correct file extension for images
+    if "url" in image_record:
         response = requests.get(image_record["url"])
-        extension = filetype.get_type(mime=response.headers.get("Content-Type")).extension
-        image_record["filename"] += "." + extension
-        
-        image_record["caption"] = string.split("\r\n")[-1]
-    except:
-        log += "Could not parse image file and caption"
+        content_type = response.headers.get("Content-Type")[:5]
+        if content_type in ["video", "image"]:
+            image_record["filename"] += "." + filetype.get_type(mime=response.headers.get("Content-Type")).extension
+
+    image_record["caption"] = "\n".join(caption)
+
+    if not caption:
+        log += "- Error: No caption found for image."
 
     return image_record, log
