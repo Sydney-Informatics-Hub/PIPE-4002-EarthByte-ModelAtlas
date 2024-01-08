@@ -46,24 +46,12 @@ body:
   validations:
     required: true
 
-- type: dropdown
+- type: input
   id: for_codes
   attributes:
     label: -> field of Research (FoR) Codes
-    description: "Please add FoR Codes (see https://vocabs.ardc.edu.au/viewById/316)"
-    multiple: true
-    options:
-      - "3706: Geophysics"
-      - "370601: Applied geophysics"
-      - "370602: Electrial and electromagnetic methods in geophysics"
-      - "370603: Geodesy"
-      - "370604: Geodynamics"
-      - "370605: Geothermics and radiometrics"
-      - "370606: Gravimetrics"
-      - "370607: Magnetism and palaeomagnetism"
-      - "370608: Petrophysics and rock mechanics"
-      - "370609: Seismology and seismic exploration"
-      - "370610: Geophysics not elsewhere defined"
+    placeholder: "370604, 370609"
+    description: "Please add FoR Codes, separated by commas (see https://vocabs.ardc.edu.au/viewById/316)"
   validations:
     required: true
     

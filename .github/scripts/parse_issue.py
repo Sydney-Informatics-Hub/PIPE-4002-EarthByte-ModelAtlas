@@ -77,12 +77,17 @@ parse_log += "\n"
 parse_log += "**Field of Research (FoR) Codes**\n"
 
 for_codes = data["-> field of Research (FoR) Codes"].strip().split(", ")
+for_code_ref = pd.read_csv(".github/scripts/for_codes.csv", dtype=str)
 
 about_record = []
 for for_code in for_codes:
-    id = "#FoR_"+for_code.split(":")[0]
-    about_record.append({"@id": id, "@type": "DefinedTerm", "name": for_code})
-    parse_log += for_code + "\n"
+    record = for_code_ref.loc[for_code_ref["code"] == for_code]
+    if record.empty:
+        parse_log += f"- Error: FoR code `{for_code}` not found \n"
+    else:
+        for_id = "#FoR_"+record.code.values[0]
+        about_record.append({"@id": for_id, "@type": "DefinedTerm", "name": record.name.values[0]})
+        parse_log += f"- `{for_code}`: {record.name.values[0]} \n"
 
 parse_log += "\n"
 
