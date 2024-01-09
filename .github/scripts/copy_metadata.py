@@ -3,6 +3,7 @@ import re
 import requests
 import subprocess
 import json
+import pandas as pd
 from github import Github, Auth
 
 from metadata_utils import get_authors, is_orcid_format, get_record, parse_author, parse_publication, parse_software, get_funders, parse_image_and_caption
@@ -62,12 +63,15 @@ metadata["creator"] = creator_record
 metadata["name"] = model_repo_name
 
 # FoR codes
-for_codes = data["-> field of Research (FoR) Codes"].strip().split(", ")
+for_codes = [x.strip() for x in data["-> field of Research (FoR) Codes"].split(",")]
+for_code_ref = pd.read_csv(".github/scripts/for_codes.csv", dtype=str)
 
 about_record = []
 for for_code in for_codes:
-    id = "#FoR_"+for_code.split(":")[0]
-    about_record.append({"@id": id, "@type": "DefinedTerm", "name": for_code})
+    record = for_code_ref.loc[for_code_ref["code"] == for_code]
+    if not record.empty:
+        for_id = "#FoR_"+record.code.values[0]
+        about_record.append({"@id": for_id, "@type": "DefinedTerm", "name": record.name.values[0]})
 
 metadata["about"] = about_record
 

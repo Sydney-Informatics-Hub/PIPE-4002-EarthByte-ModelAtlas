@@ -26,7 +26,7 @@ jobs:
         run: |
           source activate
           conda init
-          conda install -c conda-forge pygithub filetype orcid habanero
+          conda install -c conda-forge pygithub filetype orcid habanero pandas
 
       # parse issue
       - name: parse issue
@@ -60,7 +60,7 @@ jobs:
         run: |
           source activate
           conda init
-          conda install -c conda-forge pygithub filetype orcid habanero
+          conda install -c conda-forge pygithub filetype orcid habanero pandas
 
       # create the model repo from the template
       - name: create model repo

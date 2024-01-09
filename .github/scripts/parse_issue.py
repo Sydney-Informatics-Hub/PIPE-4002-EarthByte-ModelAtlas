@@ -2,6 +2,7 @@ import os
 import re
 import requests
 import subprocess
+import pandas as pd
 from github import Github, Auth
 
 from metadata_utils import get_authors, is_orcid_format, get_record, parse_author, parse_publication, parse_software, get_funders, parse_image_and_caption
