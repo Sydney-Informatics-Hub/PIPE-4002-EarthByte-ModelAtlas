@@ -76,7 +76,7 @@ parse_log += "\n"
 # FoR codes
 parse_log += "**Field of Research (FoR) Codes**\n"
 
-for_codes = data["-> field of Research (FoR) Codes"].strip().split(", ")
+for_codes = [x.strip() for x in data["-> field of Research (FoR) Codes"].split(",")]
 for_code_ref = pd.read_csv(".github/scripts/for_codes.csv", dtype=str)
 
 about_record = []
@@ -104,7 +104,7 @@ parse_log += "\n"
 # Model category
 parse_log += "**Model category**\n"
 
-model_categories = data["-> model category"].strip().split(", ")
+model_categories = [x.strip() for x in data["-> model category"].split(",")]
 for model_category in model_categories:
     parse_log += f"- {model_category} \n"
 
@@ -192,7 +192,7 @@ parse_log += "\n"
 # Scientific Keywords
 parse_log += "**Scientific keywords**\n"
 
-keywords = data["-> scientific keywords"].strip().split(", ")
+keywords = [x.strip() for x in data["-> scientific keywords"].split(",")]
 if keywords[0] == "_No response_":
     parse_log += "No keywords given"
 else:
@@ -204,7 +204,7 @@ parse_log += "\n"
 # Identify funders
 parse_log += "**Funder**\n"
 
-funders = data["-> funder"].strip().split(", ")
+funders = [x.strip() for x in data["-> funder"].split(",")]
 
 if funders[0] == "_No response_":
     try:
@@ -312,7 +312,7 @@ parse_log += "\n"
 # Software Keywords
 parse_log += "**Software & algorithm keywords**\n"
 
-software_keywords = data["-> software & algorithm keywords"].strip().split(", ")
+software_keywords = [x.strip for x in data["-> software & algorithm keywords"].split(",")]
 if software_keywords[0] == "_No response_":
     parse_log += "No keywords given\n"
 else:
