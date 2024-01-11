@@ -70,7 +70,7 @@ body:
       - MIT
       - BSL-1.0
       - Unlicense
-      - None
+      - No license
   validations:
     required: true
 
