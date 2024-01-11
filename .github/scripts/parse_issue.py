@@ -96,8 +96,17 @@ parse_log += "\n"
 # License
 parse_log += "**License**\n"
 
+license_lut = pd.read_csv(".github/scripts/licenses.csv", dtype=str)
+
 license = data["-> license"].strip()
-parse_log += license + "\n"
+
+if license != "None":
+    license_name = license_lut[license_lut.license == license].name.values[0]
+    license_url = license_lut[license_lut.license == license].url.values[0]
+
+    parse_log += f"[{license_name}]({license_url})\n"
+else:
+    parse_log += "No license \n"
 
 parse_log += "\n"
 
