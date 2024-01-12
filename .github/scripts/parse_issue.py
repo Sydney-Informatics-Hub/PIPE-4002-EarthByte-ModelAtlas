@@ -244,12 +244,16 @@ parse_log += "\n"
 # Software Framework DOI
 parse_log += "**Software Framework DOI/URI**\n"
 
-software_doi = data["-> software framework DOI/URI"].strip().split("zenodo.")[1]
+software_doi = data["-> software framework DOI/URI"].strip()
 
 if software_doi == "_No response_":
     parse_log += "No DOI/URI provided. \n"
     software_record={"@type": "SoftwareApplication"}
 else:
+    if "zenodo" in software_doi:
+        software_doi = software_doi.split("zenodo.")[1]
+    else:
+        parse_log += "Haven't yet worked out how to deal with software dois that aren't zenodo \n"   
     software_metadata, log1 = get_record("software", software_doi)
     software_record, log2 = parse_software(software_metadata)
     if log1 or log2:
