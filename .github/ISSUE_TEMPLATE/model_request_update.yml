@@ -104,7 +104,7 @@ body:
   attributes:
     label: -> description
     placeholder: "model description"
-    description: "if no input provided, info. from publication DOI will be used. Markdown formatting can be here and here will be rendered on the website."
+    description: "if no input provided, info. from publication DOI will be used. Markdown formatting can be used here and will be rendered on the website."
 
 - type: textarea
   id: model_authors
@@ -264,4 +264,4 @@ body:
   attributes:
     label: -> add a description of your model setup
     placeholder: "The model uses a cartesian domain, with size 200 km x 200 km x 300 km."
-    description: "Please provide add a brief (< 300 words) description of your model setup, boundary condition, assumptions. Markdown formatting can be here and here will be rendered on the website."
+    description: "Please provide add a brief (< 300 words) description of your model setup, boundary condition, assumptions. Markdown formatting can be used here and will be rendered on the website."
