@@ -12,7 +12,7 @@ body:
         <h1 style=”font-size: 48px;”>What is this process all about?</h1>
          This issue form is used primarily to:
          1. gather and construct metadata information for your model.` file. <br />
-         2. spawn a repository for your model. 
+         2. spawn a repository for your model.  <br />
          3. collect specific resources so we can feature your model on out website <br />
 
 - type: markdown
@@ -20,7 +20,6 @@ body:
     value: |
         <h1 style=”font-size: 48px;”>What is this NOT about?</h1>
          1. this form is not intended as a place to submit your model files (code, data, additional documents) <br />
-           * all such information can be added at a later stage
          ...
 
 - type: markdown
