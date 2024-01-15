@@ -10,7 +10,6 @@ body:
   attributes:
     value: |
         <h1 style=”font-size: 48px;”>What is this process all about?</h1>
-         This issue form is used primarily to:
          1. gather and construct metadata information for your model.` file. <br />
          2. spawn a repository for your model.  <br />
          3. collect specific resources so we can feature your model on out website <br />
