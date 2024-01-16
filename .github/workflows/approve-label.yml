@@ -28,15 +28,23 @@ jobs:
           conda init
           conda install -c conda-forge pygithub filetype orcid habanero pandas
 
-      # parse issue
-      - name: parse issue
+      # generate report
+      - name: generate report
         env:
           ISSUE_NUMBER: ${{ github.event.issue.number }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          ORCID_ID: ${{ secrets.ORCID_ID }}
-          ORCID_PW: ${{ secrets.ORCID_PW }}
         run: |
-          python3 .github/scripts/parse_issue.py
+          python3 .github/scripts/write_report.py
+
+      # # parse issue
+      # - name: parse issue
+      #   env:
+      #     ISSUE_NUMBER: ${{ github.event.issue.number }}
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #     ORCID_ID: ${{ secrets.ORCID_ID }}
+      #     ORCID_PW: ${{ secrets.ORCID_PW }}
+      #   run: |
+      #     python3 .github/scripts/parse_issue.py
 
   createNewRepo:
     if: contains(github.event.label.name, 'approved')
@@ -76,24 +84,13 @@ jobs:
           gh repo create ${OWNER}/${REPO_NAME} --template $TEMPLATE $FLAGS
           echo "repo_name=${REPO_NAME}" >> $GITHUB_OUTPUT
 
-      # parse metadata and copy to repo
-      - name: copy metadata
-        id: copy-metadata
+      # parse metadata and write files to repo
+      - name: write metadata
         env:
           GITHUB_TOKEN: ${{ secrets.PAT }}
           OWNER: hvidy
           REPO: ${{ steps.create-model-repo.outputs.repo_name }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
         run: |
-          python3 .github/scripts/copy_metadata.py
-
-      # copy files to the new repo
-      - name: copy files
-        id: copy-files
-        env:
-          GITHUB_TOKEN: ${{ secrets.PAT }}
-          OWNER: hvidy
-          REPO: ${{ steps.create-model-repo.outputs.repo_name }}
-          ISSUE_NUMBER: ${{ github.event.issue.number }}
-        run: |
+          python3 .github/scripts/write_metadata.py
           python3 .github/scripts/copy_files.py

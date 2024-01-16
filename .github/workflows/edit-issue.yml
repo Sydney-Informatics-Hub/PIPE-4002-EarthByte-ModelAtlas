@@ -28,12 +28,20 @@ jobs:
           conda init
           conda install -c conda-forge pygithub filetype orcid habanero pandas
 
-      # parse issue
-      - name: parse issue
+      # generate report
+      - name: generate report
         env:
           ISSUE_NUMBER: ${{ github.event.issue.number }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          ORCID_ID: ${{ secrets.ORCID_ID }}
-          ORCID_PW: ${{ secrets.ORCID_PW }}
         run: |
-          python3 .github/scripts/parse_issue.py
+          python3 .github/scripts/write_report.py
+
+      # # parse issue
+      # - name: parse issue
+      #   env:
+      #     ISSUE_NUMBER: ${{ github.event.issue.number }}
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #     ORCID_ID: ${{ secrets.ORCID_ID }}
+      #     ORCID_PW: ${{ secrets.ORCID_PW }}
+      #   run: |
+      #     python3 .github/scripts/parse_issue.py
