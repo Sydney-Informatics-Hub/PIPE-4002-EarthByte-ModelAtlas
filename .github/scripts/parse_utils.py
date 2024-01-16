@@ -1,4 +1,5 @@
 import re
+import json
 
 from metadata_utils import 
 
@@ -114,3 +115,9 @@ def dict_to_report(issue_dict):
 	report = str(issue_dict)
 
 	return report
+
+def dict_to_metadata(issue_dict);
+
+	metadata = json.dumps(issue_dict)
+
+	return metadata
