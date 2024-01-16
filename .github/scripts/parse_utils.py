@@ -21,6 +21,7 @@ def parse_name_or_orcid(name_or_orcid):
             }
         except:
             error_log += f"- Error: name `{name_or_orcid}` in unexpected format. Expected `last name(s), first name(s)` or ORCID. \n"
+            creator_record = {}
 
     return creator_record, error_log
 
