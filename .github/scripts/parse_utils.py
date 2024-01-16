@@ -1,7 +1,7 @@
 import re
 import json
 
-from metadata_utils import 
+from metadata_utils import get_record, parse_author, is_orcid_format
 
 def parse_name_or_orcid(name_or_orcid):
 	error_log = ""
