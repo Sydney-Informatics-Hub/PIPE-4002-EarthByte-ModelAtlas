@@ -116,7 +116,7 @@ def dict_to_report(issue_dict):
 
     return report
 
-def dict_to_metadata(issue_dict);
+def dict_to_metadata(issue_dict):
 
     metadata = json.dumps(issue_dict)
 
