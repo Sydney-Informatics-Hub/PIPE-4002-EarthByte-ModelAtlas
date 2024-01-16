@@ -1,0 +1,19 @@
+from github import Github, Auth
+from parse_utils import parse_issue, dict_to_report
+
+# Get issue
+auth = Auth.Token(token)
+g = Github(auth=auth)
+repo = g.get_repo("hvidy/PIPE-4002-EarthByte-ModelAtlas")
+issue = repo.get_issue(number = issue_number)
+
+# Parse issue
+data, error_log = parse_issue(issue)
+
+# Write report
+report = "Thank you for submitting. Please check the output below, and fix any errors, etc.\n\n"
+
+report += error_log + dict_to_report(data)
+
+# Post report to issue as a comment
+issue.create_comment(report)
