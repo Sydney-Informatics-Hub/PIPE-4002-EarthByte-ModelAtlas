@@ -4,120 +4,120 @@ import json
 from metadata_utils import get_record, parse_author, is_orcid_format
 
 def parse_name_or_orcid(name_or_orcid):
-	error_log = ""
+    error_log = ""
 
-	if is_orcid_format(name_or_orcid):
-	    orcid_record, log1 = get_record("author", name_or_orcid)
-    	creator_record, log2 = parse_author(orcid_record)
-	    if log1 or log2:
-    	    error_log += log1 + log2
-	else:
-	    try:
-        	familyName, givenName = name_or_orcid.split(",")
-        	creator_record = {
-	            "@type": "Person",
-	            "givenName": givenName,
-	            "familyName": familyName,
-	        }
-	    except:
-	        error_log += f"- Error: name `{name_or_orcid}` in unexpected format. Expected `last name(s), first name(s)` or ORCID. \n"
+    if is_orcid_format(name_or_orcid):
+        orcid_record, log1 = get_record("author", name_or_orcid)
+        creator_record, log2 = parse_author(orcid_record)
+        if log1 or log2:
+            error_log += log1 + log2
+    else:
+        try:
+            familyName, givenName = name_or_orcid.split(",")
+            creator_record = {
+                "@type": "Person",
+                "givenName": givenName,
+                "familyName": familyName,
+            }
+        except:
+            error_log += f"- Error: name `{name_or_orcid}` in unexpected format. Expected `last name(s), first name(s)` or ORCID. \n"
 
     return creator_record, error_log
 
 def parse_issue(issue):
-	error_log = ""
+    error_log = ""
 
-	# Parse issue body
-	# Identify headings and subsequent text
-	regex = r"### *(?P<key>.*?)\s*[\r\n]+(?P<value>[\s\S]*?)(?=###|$)"
-	data = dict(re.findall(regex, issue.body))
+    # Parse issue body
+    # Identify headings and subsequent text
+    regex = r"### *(?P<key>.*?)\s*[\r\n]+(?P<value>[\s\S]*?)(?=###|$)"
+    data = dict(re.findall(regex, issue.body))
 
-	data_dict = {}
+    data_dict = {}
 
-	#############
-	# Section 1
-	#############
-	# creator/contributor
-	creator = data["-> creator/contributor ORCID (or name)"].strip()
-	creator_record, log = parse_name_or_orcid(creator)
-	data_dict["creator"] = creator_record
-	if log:
-		error_log += "**Creator/Contributor**\n" + log +"\n"
+    #############
+    # Section 1
+    #############
+    # creator/contributor
+    creator = data["-> creator/contributor ORCID (or name)"].strip()
+    creator_record, log = parse_name_or_orcid(creator)
+    data_dict["creator"] = creator_record
+    if log:
+        error_log += "**Creator/Contributor**\n" + log +"\n"
 
-	# slug
+    # slug
 
-	# FoR codes
+    # FoR codes
 
-	# license
+    # license
 
-	# model category
+    # model category
 
-	# associated publication DOI
+    # associated publication DOI
 
-	# title
+    # title
 
-	# description
+    # description
 
-	# model authors
+    # model authors
 
-	# scientific keywords
+    # scientific keywords
 
-	# funder
-
-
-	#############
-	# Section 2
-	#############
-	# include model code
-
-	# model code URI/DOI
-
-	# include model output data
-
-	# model output URI/DOI
+    # funder
 
 
-	#############
-	# Section 3
-	#############
-	# software framework DOI/URI
+    #############
+    # Section 2
+    #############
+    # include model code
 
-	# software framework source repository
+    # model code URI/DOI
 
-	# name of primary software framework
+    # include model output data
 
-	# software framework authors
-
-	# software & algorithm keywords
-
-	# computer URI/DOI
+    # model output URI/DOI
 
 
-	#############
-	# Section 4
-	#############
-	# landing page image and caption
+    #############
+    # Section 3
+    #############
+    # software framework DOI/URI
 
-	# animation
+    # software framework source repository
 
-	# graphic abstract
+    # name of primary software framework
 
-	# model setup figure
+    # software framework authors
 
-	# description
+    # software & algorithm keywords
+
+    # computer URI/DOI
+
+
+    #############
+    # Section 4
+    #############
+    # landing page image and caption
+
+    # animation
+
+    # graphic abstract
+
+    # model setup figure
+
+    # description
 
 
 
-	return data, error_log
+    return data, error_log
 
 def dict_to_report(issue_dict):
 
-	report = str(issue_dict)
+    report = str(issue_dict)
 
-	return report
+    return report
 
 def dict_to_metadata(issue_dict);
 
-	metadata = json.dumps(issue_dict)
+    metadata = json.dumps(issue_dict)
 
-	return metadata
+    return metadata
