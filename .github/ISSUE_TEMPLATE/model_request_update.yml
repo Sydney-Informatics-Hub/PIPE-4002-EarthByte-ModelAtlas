@@ -10,18 +10,16 @@ body:
   attributes:
     value: |
         <h1 style=”font-size: 48px;”>What is this process all about?</h1>
-         1. this issue form is used to build up metadata for model. This will be parsed and collected in a `mate.json` file. <br />
-         2. once cheked & approved, the information gathered here will be used to spawn a repository for your model. 
-         This will be the shell for anything material you want to include (code, data, additional documents) <br />
-         3. This form collects some specific resources required to feeature your model on out website <br />
+         1. construct metadata information for your model. <br />
+         2. spawn a repository for your model. <br />
+         3. collect specific resources so we can feature your model on the M@TE website <br />
 
 - type: markdown
   attributes:
     value: |
         <h1 style=”font-size: 48px;”>What is this NOT about?</h1>
          1. this form is not intended as a place to submit your model files (code, data, additional documents) <br />
-         2. once we have spawned a repository for your model, you can begining adding files (the actual payload)
-         3. any information collected here can be changed later! <br />
+  
          ...
 
 - type: markdown
@@ -70,7 +68,7 @@ body:
       - MIT
       - BSL-1.0
       - Unlicense
-      - None
+      - No license
   validations:
     required: true
 
@@ -106,7 +104,7 @@ body:
   attributes:
     label: -> description
     placeholder: "model description"
-    description: "if no input provided, info. from publication DOI will be used"
+    description: "if no input provided, info. from publication DOI will be used. Markdown formatting can be used here and will be rendered on the website."
 
 - type: textarea
   id: model_authors
@@ -266,4 +264,4 @@ body:
   attributes:
     label: -> add a description of your model setup
     placeholder: "The model uses a cartesian domain, with size 200 km x 200 km x 300 km."
-    description: "Please provide add a brief (< 300 words) description of your model setup, boundary condition, assumptions"
+    description: "Please provide add a brief (< 300 words) description of your model setup, boundary condition, assumptions. Markdown formatting can be used here and will be rendered on the website."
