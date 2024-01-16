@@ -1,5 +1,10 @@
+import os
 from github import Github, Auth
 from parse_utils import parse_issue, dict_to_report
+
+# Environment variables
+token = os.environ.get("GITHUB_TOKEN")
+issue_number = int(os.environ.get("ISSUE_NUMBER"))
 
 # Get issue
 auth = Auth.Token(token)
