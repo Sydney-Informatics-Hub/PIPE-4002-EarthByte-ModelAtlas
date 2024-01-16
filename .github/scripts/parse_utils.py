@@ -108,7 +108,7 @@ def parse_issue(issue):
 
 
 
-    return data, error_log
+    return data_dict, error_log
 
 def dict_to_report(issue_dict):
 
