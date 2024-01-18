@@ -92,7 +92,15 @@ def parse_issue(issue):
     data_dict["license"] = license_record
 
     # model category
-    data_dict["model_category"] = [x.strip() for x in data["-> model category"].split(",")]
+    model_category = [x.strip() for x in data["-> model category"].split(",")]
+
+    if model_category[0] == "_No response_":
+        model_category = []
+        error_log += "**Model category**\n"
+        error_log += "Warning: No category selected \n"
+
+    data_dict["model_category"] = model_category
+
 
     # associated publication DOI
     publication_doi = data["-> associated publication DOI"].strip()
