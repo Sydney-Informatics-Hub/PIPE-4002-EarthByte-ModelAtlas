@@ -1,9 +1,10 @@
+import os
 import re
 import json
 import pandas as pd
 import subprocess
 
-from metadata_utils import get_record, get_authors, parse_author, is_orcid_format
+from metadata_utils import get_record, get_authors, parse_author, parse_publication, is_orcid_format
 
 def parse_name_or_orcid(name_or_orcid):
     error_log = ""
@@ -162,7 +163,7 @@ def parse_issue(issue):
     if keywords[0] == "_No response_":
         keywords = []
         error_log += "**Scientific keywords**\n"
-        error_log += "Warning: No keywords given"
+        error_log += "Warning: No keywords given \n"
 
     data_dict["keywords"] = keywords
 
@@ -175,7 +176,7 @@ def parse_issue(issue):
         except:
             funder_list = []
             error_log += "**Funder**\n"
-            error_log += "- Warning: No funders provided or found in publication. \n"
+            error_log += "Warning: No funders provided or found in publication. \n"
     else:
         funder_list, log = get_funders(funders)
         if log:
