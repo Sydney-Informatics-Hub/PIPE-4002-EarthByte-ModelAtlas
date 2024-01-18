@@ -1,5 +1,7 @@
 import re
 import json
+import pandas as pd
+import subprocess
 
 from metadata_utils import get_record, get_authors, parse_author, is_orcid_format
 
