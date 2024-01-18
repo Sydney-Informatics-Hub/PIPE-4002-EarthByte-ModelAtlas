@@ -324,7 +324,7 @@ def get_authors(author_list):
                 else:
                     authors.append(author_record)
             except Exception as err:
-                log += "- Error: unable to find ORCID iD. Check you have entered it correctly. \n"
+                log += "Error: unable to find ORCID iD. Check you have entered it correctly. \n"
                 log += f"`{err}`\n"
         else:
             try:
@@ -336,7 +336,7 @@ def get_authors(author_list):
                 }
                 authors.append(author_record)
             except:
-                log += f"- Error: author name `{author}` in unexpected format. Expected `last name(s), first name(s)`. \n"
+                log += f"Error: author name `{author}` in unexpected format. Expected `last name(s), first name(s)`. \n"
 
     return authors, log
 
