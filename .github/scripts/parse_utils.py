@@ -95,6 +95,7 @@ def parse_issue(issue):
 
     # associated publication DOI
     publication_doi = data["-> associated publication DOI"].strip()
+    publication_record = {}
 
     if publication_doi == "_No response_":
         error_log += "**Associated Publication**\n"
@@ -109,6 +110,7 @@ def parse_issue(issue):
             error_log += "**Associated Publication**\n"
             error_log += f"Error: unable to obtain metadata for DOI {publication_doi} \n"
             error_log += f"`{err}`\n"
+    
     data_dict["publication"] = publication_record
 
     # title
