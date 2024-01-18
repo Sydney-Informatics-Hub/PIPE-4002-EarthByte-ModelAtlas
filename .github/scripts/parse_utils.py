@@ -242,9 +242,9 @@ def dict_to_report(issue_dict):
     report = "Please check the output below to ensure its accuracy \n"
 
     report += "**Creator/Contributor**\n"
-    report += f"Creator/contributor is {issue_dict['creator']['givenName']} {creator_record['familyName']}"
+    report += f"Creator/contributor is {issue_dict['creator']['givenName']} {issue_dict['creator']['familyName']}"
     if "@id" in issue_dict['creator']:
-        report += "({creator_record['@id']})"
+        report += f"({issue_dict['creator']['@id']})"
     report += "\n"
 
     report += "\n Dumping dictionary during testing"
