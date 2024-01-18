@@ -137,7 +137,7 @@ def parse_issue(issue):
             error_log += "**Description**\n"
             error_log += "Error: no descrition found, nor abstract for associated publication \n"
 
-    data_dict["description"] += description
+    data_dict["description"] = description
 
     # model authors
     authors = data['-> model authors'].strip().split('\r\n')
