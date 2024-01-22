@@ -447,3 +447,13 @@ def parse_image_and_caption(img_string, default_filename):
         log += "- Error: No caption found for image.\n"
 
     return image_record, log
+
+def check_uri(uri):
+    try:
+        response = requests.get(uri)
+        response.raise_for_status()  # Raise an exception for HTTP errors
+
+        return "OK"
+
+    except Exception as err:
+        return err.args[0]
