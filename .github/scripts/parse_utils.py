@@ -296,7 +296,7 @@ def dict_to_report(issue_dict):
     report += "**Creator/Contributor**\n"
     report += f"Creator/contributor is {issue_dict['creator']['givenName']} {issue_dict['creator']['familyName']} "
     if "@id" in issue_dict['creator']:
-        report += f"[{issue_dict['creator']['@id'].split('/')[-1]}]({issue_dict['creator']['@id']})"
+        report += f"([{issue_dict['creator']['@id'].split('/')[-1]}]({issue_dict['creator']['@id']}))"
     report += "\n"
 
     # slug
@@ -307,6 +307,7 @@ def dict_to_report(issue_dict):
     report += "**Field of Research (FoR) Codes**\n"
     for for_code in issue_dict["for_codes"]:
         report += f"- `{for_code['@id']}`: {for_code['name']} \n"
+    report += "\n"
 
     # license
     report += "**License**\n"
@@ -319,11 +320,12 @@ def dict_to_report(issue_dict):
     report += "**Model Category**\n"
     for category in issue_dict["model_category"]:
         report += f"- {category} \n"
+    report += "\n"
 
     # associated publication DOI
     if "@id" in issue_dict["publication"]:
         report += "**Associated Publication**\n"
-        report += f"Found publication: _[{issue_dict['publication']['name']}]({issue_dict['publication']['@id']})_"
+        report += f"Found publication: _[{issue_dict['publication']['name']}]({issue_dict['publication']['@id']})_ \n"
 
     # title
     report += "**Title**\n"
@@ -338,13 +340,15 @@ def dict_to_report(issue_dict):
     for author in issue_dict["authors"]:
         report += f"- {author['givenName']} {author['familyName']} "
         if "@id" in author:
-            report += f"[{author['@id'].split('/')[-1]}]({author['@id']})"
+            report += f"([{author['@id'].split('/')[-1]}]({author['@id']}))"
         report += "\n"
+    report += "\n"
 
     # scientific keywords
     report += "**Scientific Keywords**\n"
     for keyword in issue_dict["keywords"]:
         report += f"- {keyword} \n"
+    report += "\n"
 
     # funder
     report += "**Funder**\n"
@@ -355,6 +359,7 @@ def dict_to_report(issue_dict):
         elif "url" in funder:
             report += f"({funder['url']})"
         report += "\n"
+    report += "\n"
 
 
     #############

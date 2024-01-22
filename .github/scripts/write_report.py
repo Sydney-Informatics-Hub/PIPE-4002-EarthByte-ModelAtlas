@@ -18,10 +18,10 @@ data, error_log = parse_issue(issue)
 # Write report
 report = "Thank you for submitting. Please check the output below, and fix any errors, etc.\n\n"
 
-report += "# Errors and Warnings"
+report += "# Errors and Warnings \n"
 report += error_log + "\n\n"
 
-report += "# Parsed data"
+report += "# Parsed data \n"
 report += dict_to_report(data)
 
 # Post report to issue as a comment
