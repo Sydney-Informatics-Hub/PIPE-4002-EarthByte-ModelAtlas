@@ -22,6 +22,7 @@ report += "# Errors and Warnings \n"
 report += error_log + "\n\n"
 
 report += "# Parsed data \n"
+report += "Please check the output below to ensure its accuracy \n\n"
 report += dict_to_report(data)
 
 # Post report to issue as a comment

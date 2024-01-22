@@ -287,8 +287,6 @@ def parse_issue(issue):
 
 def dict_to_report(issue_dict):
 
-    report = "Please check the output below to ensure its accuracy \n"
-
     #############
     # Section 1
     #############
@@ -297,11 +295,11 @@ def dict_to_report(issue_dict):
     report += f"Creator/contributor is {issue_dict['creator']['givenName']} {issue_dict['creator']['familyName']} "
     if "@id" in issue_dict['creator']:
         report += f"([{issue_dict['creator']['@id'].split('/')[-1]}]({issue_dict['creator']['@id']}))"
-    report += "\n"
+    report += "\n\n"
 
     # slug
     report += "**Model Repository Slug**\n"
-    report += f"Model repo will be created with name `{issue_dict['slug']}` \n"
+    report += f"Model repo will be created with name `{issue_dict['slug']}` \n\n"
 
     # FoR codes
     report += "**Field of Research (FoR) Codes**\n"
@@ -312,9 +310,9 @@ def dict_to_report(issue_dict):
     # license
     report += "**License**\n"
     if "url" in issue_dict["license"]:
-        report += f"[{issue_dict['license']['name']}]({issue_dict['license']['url']})\n"
+        report += f"[{issue_dict['license']['name']}]({issue_dict['license']['url']})\n\n"
     else:
-        report += f"{issue_dict['license']['name']}\n"
+        report += f"{issue_dict['license']['name']}\n\n"
 
     # model category
     report += "**Model Category**\n"
@@ -325,15 +323,15 @@ def dict_to_report(issue_dict):
     # associated publication DOI
     if "@id" in issue_dict["publication"]:
         report += "**Associated Publication**\n"
-        report += f"Found publication: _[{issue_dict['publication']['name']}]({issue_dict['publication']['@id']})_ \n"
+        report += f"Found publication: _[{issue_dict['publication']['name']}]({issue_dict['publication']['@id']})_ \n\n"
 
     # title
     report += "**Title**\n"
-    report += issue_dict["title"] + "\n"
+    report += issue_dict["title"] + "\n\n"
 
     # description
     report += "**Description**\n"
-    report += issue_dict["description"] + "\n"
+    report += issue_dict["description"] + "\n\n"
 
     # model authors
     report += "**Model Authors**\n"
