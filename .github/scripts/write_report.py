@@ -18,7 +18,11 @@ data, error_log = parse_issue(issue)
 # Write report
 report = "Thank you for submitting. Please check the output below, and fix any errors, etc.\n\n"
 
-report += error_log + dict_to_report(data)
+report += "# Errors and Warnings"
+report += error_log + "\n\n"
+
+report += "# Parsed data"
+report += dict_to_report(data)
 
 # Post report to issue as a comment
 issue.create_comment(report)

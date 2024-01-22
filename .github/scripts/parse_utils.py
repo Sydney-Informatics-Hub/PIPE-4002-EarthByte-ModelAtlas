@@ -279,6 +279,8 @@ def parse_issue(issue):
 
     # description
 
+    # associated publication DOI
+
 
 
     return data_dict, error_log
@@ -287,11 +289,101 @@ def dict_to_report(issue_dict):
 
     report = "Please check the output below to ensure its accuracy \n"
 
+    #############
+    # Section 1
+    #############
+    # creator/contributor
     report += "**Creator/Contributor**\n"
     report += f"Creator/contributor is {issue_dict['creator']['givenName']} {issue_dict['creator']['familyName']} "
     if "@id" in issue_dict['creator']:
-        report += f"({issue_dict['creator']['@id']})"
+        report += f"[{issue_dict['creator']['@id'].split('/')[-1]}]({issue_dict['creator']['@id']})"
     report += "\n"
+
+    # slug
+    report += "**Model Repository Slug**\n"
+    report += f"Model repo will be created with name `{issue_dict['slug']}` \n"
+
+    # FoR codes
+    report += "**Field of Research (FoR) Codes**\n"
+    for for_code in issue_dict["for_codes"]:
+        report += f"- `{for_code['@id']}`: {for_code['name']} \n"
+
+    # license
+    report += "**License**\n"
+    if url in issue_dict["license"]:
+        report += f"[{issue_dict['license']['name']}]({issue_dict['license']['url']})\n"
+    else:
+        report += f"{issue_dict['license']['name']}\n"
+
+    # model category
+    report += "**Model Category**\n"
+    for category in issue_dict["model_category"]:
+        report += f"- {category} \n"
+
+    # associated publication DOI
+    if "@id" in issue_dict["publication"]:
+        report += "**Associated Publication**\n"
+        report += f"Found publication: _[{issue_dict['publication']['name']}]({issue_dict['publication']['@id']})_"
+
+    # title
+    report += "**Title**\n"
+    report += data_dict["title"] + "\n"
+
+    # description
+    report += "**Description**\n"
+    report += data_dict["description"] + "\n"
+
+    # model authors
+    report += "**Model Authors**\n"
+    for author in issue_dict["authors"]:
+        report += f"- {author['givenName']} {author['familyName']} "
+        if "@id" in author:
+            report += f"[{author['@id'].split('/')[-1]}]({author['@id']})"
+        report += "\n"
+
+    # scientific keywords
+    report += "**Scientific Keywords**\n"
+    for keyword in issue_dict["keywords"]:
+        report += f"- {keyword} \n"
+
+    # funder
+    report += "**Funder**\n"
+    for funder in issue_dict["funder"]:
+        report += f"- {funder['name']} "
+        if "@id" in funder:
+            report += f"({funder['@id']})"
+        elif "url" in funder:
+            report += f"({funder['url']})"
+        report += "\n"
+
+
+    #############
+    # Section 2
+    #############
+    # include model code
+    # model code URI/DOI
+    # include model output data
+    # model output URI/DOI
+
+     #############
+    # Section 3
+    #############
+    # software framework DOI/URI
+    # software framework source repository
+    # name of primary software framework
+    # software framework authors
+    # software & algorithm keywords
+    # computer URI/DOI
+
+    #############
+    # Section 4
+    #############
+    # landing page image and caption
+    # animation
+    # graphic abstract
+    # model setup figure
+    # description
+    # associated publication DOI   
 
     report += "\n Dumping dictionary during testing"
     report += str(issue_dict)
