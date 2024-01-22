@@ -290,8 +290,9 @@ def dict_to_report(issue_dict):
     #############
     # Section 1
     #############
+    report = "## Section 1: Summary of your model \n"
     # creator/contributor
-    report = "**Creator/Contributor**\n"
+    report += "**Creator/Contributor**\n"
     report += f"Creator/contributor is {issue_dict['creator']['givenName']} {issue_dict['creator']['familyName']} "
     if "@id" in issue_dict['creator']:
         report += f"([{issue_dict['creator']['@id'].split('/')[-1]}]({issue_dict['creator']['@id']}))"
@@ -343,10 +344,11 @@ def dict_to_report(issue_dict):
     report += "\n"
 
     # scientific keywords
-    report += "**Scientific Keywords**\n"
-    for keyword in issue_dict["keywords"]:
-        report += f"- {keyword} \n"
-    report += "\n"
+    if issue_dict["keywords"]:
+        report += "**Scientific Keywords**\n"
+        for keyword in issue_dict["keywords"]:
+            report += f"- {keyword} \n"
+        report += "\n"
 
     # funder
     report += "**Funder**\n"
@@ -363,14 +365,31 @@ def dict_to_report(issue_dict):
     #############
     # Section 2
     #############
+    report += "## Section 2: your model code, output data \n"
     # include model code
+    if "include_model_code" in issue_dict:
+        report += "**Include model code?** \n"
+        report += f"{str(issue_dict["include_model_code"])} \n\n"
+
     # model code URI/DOI
+    if "model_code_uri" in issue_dict:
+        report += "**Model code URI/DOI** \n"
+        report += f"{issue_dict["model_code_uri"]} \n\n"
+
     # include model output data
+    if "include_model_output" in issue_dict:
+        report += "**Include model output data?** \n"
+        report += f"{str(issue_dict["include_model_output"])} \n\n"
+
     # model output URI/DOI
+    if "model_output_uri" in issue_dict:
+        report += "**Model output URI/DOI** \n"
+        report += f"{issue_dict["model_output_uri"]} \n\n"
 
      #############
     # Section 3
     #############
+    report += "## Section 3: software framework and compute details \n"
     # software framework DOI/URI
     # software framework source repository
     # name of primary software framework
@@ -381,6 +400,7 @@ def dict_to_report(issue_dict):
     #############
     # Section 4
     #############
+    report += "## Section 4: web material (for mate.science) \n"
     # landing page image and caption
     # animation
     # graphic abstract
