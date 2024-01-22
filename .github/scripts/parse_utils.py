@@ -209,9 +209,9 @@ def parse_issue(issue):
     model_code = data["-> include model code ?"].strip().split("\n")
 
     selection = parse_yes_no_choice(model_code)
-    if type selection is bool:
+    if type(selection) is bool:
         data_dict["include_model_code"] = selection
-    if type selection is str:
+    if type(selection) is str:
         error_log += "**Include model code?**\n" + selection + "\n"
 
     # model code URI/DOI
