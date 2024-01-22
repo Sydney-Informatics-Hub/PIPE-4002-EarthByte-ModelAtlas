@@ -369,22 +369,22 @@ def dict_to_report(issue_dict):
     # include model code
     if "include_model_code" in issue_dict:
         report += "**Include model code?** \n"
-        report += f"{str(issue_dict["include_model_code"])} \n\n"
+        report += f"{str(issue_dict['include_model_code'])} \n\n"
 
     # model code URI/DOI
     if "model_code_uri" in issue_dict:
         report += "**Model code URI/DOI** \n"
-        report += f"{issue_dict["model_code_uri"]} \n\n"
+        report += f"{issue_dict['model_code_uri']} \n\n"
 
     # include model output data
     if "include_model_output" in issue_dict:
         report += "**Include model output data?** \n"
-        report += f"{str(issue_dict["include_model_output"])} \n\n"
+        report += f"{str(issue_dict['include_model_output'])} \n\n"
 
     # model output URI/DOI
     if "model_output_uri" in issue_dict:
         report += "**Model output URI/DOI** \n"
-        report += f"{issue_dict["model_output_uri"]} \n\n"
+        report += f"{issue_dict['model_output_uri']} \n\n"
 
      #############
     # Section 3
