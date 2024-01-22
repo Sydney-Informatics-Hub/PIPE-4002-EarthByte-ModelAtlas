@@ -291,7 +291,7 @@ def dict_to_report(issue_dict):
     # Section 1
     #############
     # creator/contributor
-    report += "**Creator/Contributor**\n"
+    report = "**Creator/Contributor**\n"
     report += f"Creator/contributor is {issue_dict['creator']['givenName']} {issue_dict['creator']['familyName']} "
     if "@id" in issue_dict['creator']:
         report += f"([{issue_dict['creator']['@id'].split('/')[-1]}]({issue_dict['creator']['@id']}))"
