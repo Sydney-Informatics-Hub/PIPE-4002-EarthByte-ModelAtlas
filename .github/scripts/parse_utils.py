@@ -4,7 +4,7 @@ import json
 import pandas as pd
 import subprocess
 
-from metadata_utils import get_record, get_authors, parse_author, parse_publication, is_orcid_format
+from metadata_utils import get_record, get_authors, parse_author, parse_publication, is_orcid_format, check_uri
 
 def parse_name_or_orcid(name_or_orcid):
     error_log = ""
@@ -27,6 +27,16 @@ def parse_name_or_orcid(name_or_orcid):
             creator_record = {}
 
     return creator_record, error_log
+
+def parse_yes_no_choice(input):
+    if "X" in input[0] and "X" in input[1]:
+        return "Error: both 'yes' and 'no' selected"
+    elif "X" in input[0]:
+        return True
+    elif "X" in input[1]:
+        return False
+    else:
+        return "Error: no selection made"
 
 def parse_issue(issue):
     error_log = ""
@@ -196,12 +206,48 @@ def parse_issue(issue):
     # Section 2
     #############
     # include model code
+    model_code = data["-> include model code ?"].strip().split("\n")
+
+    selection = parse_yes_no_choice(model_code)
+    if type selection is bool:
+        data_dict["include_model_code"] = selection
+    if type selection is str:
+        error_log += "**Include model code?**\n" + selection + "\n"
 
     # model code URI/DOI
+    model_code_uri = data["-> model code URI/DOI"].strip()
+
+    if model_code_uri == "_No response_":
+        error_log += "**Model code URI/DOI**\n"
+        error_log += "Warning: No URI/DOI provided. \n"
+    else:
+        response = check_uri(model_code_uri)
+        if response == "OK":
+            data_dict["model_code_uri"] = model_code_uri
+        else:
+            error_log += "**Model code URI/DOI**\n" + response + "\n"
 
     # include model output data
+    model_output = data["-> include model output data?"].strip().split("\n")
+    
+    selection = parse_yes_no_choice(model_output)
+    if type selection is bool:
+        data_dict["include_model_code"] = selection
+    if type selection is str:
+        error_log += "**Include model output data?**\n" + selection + "\n"
 
     # model output URI/DOI
+    model_output_uri = data["-> model output URI/DOI"].strip()
+
+    if model_output_uri == "_No response_":
+        error_log += "**Model output URI/DOI**\n"
+        error_log += "Warning: No URI/DOI provided. \n"
+    else:
+        response = check_uri(model_output_uri)
+        if response == "OK":
+            data_dict["model_output_uri"] = model_output_uri
+        else:
+            error_log += "**Model output URI/DOI**\n" + response + "\n"
 
 
     #############
@@ -242,7 +288,7 @@ def dict_to_report(issue_dict):
     report = "Please check the output below to ensure its accuracy \n"
 
     report += "**Creator/Contributor**\n"
-    report += f"Creator/contributor is {issue_dict['creator']['givenName']} {issue_dict['creator']['familyName']}"
+    report += f"Creator/contributor is {issue_dict['creator']['givenName']} {issue_dict['creator']['familyName']} "
     if "@id" in issue_dict['creator']:
         report += f"({issue_dict['creator']['@id']})"
     report += "\n"
