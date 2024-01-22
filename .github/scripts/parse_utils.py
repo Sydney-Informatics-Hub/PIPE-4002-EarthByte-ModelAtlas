@@ -327,11 +327,11 @@ def dict_to_report(issue_dict):
 
     # title
     report += "**Title**\n"
-    report += data_dict["title"] + "\n"
+    report += issue_dict["title"] + "\n"
 
     # description
     report += "**Description**\n"
-    report += data_dict["description"] + "\n"
+    report += issue_dict["description"] + "\n"
 
     # model authors
     report += "**Model Authors**\n"
