@@ -310,7 +310,7 @@ def dict_to_report(issue_dict):
 
     # license
     report += "**License**\n"
-    if url in issue_dict["license"]:
+    if "url" in issue_dict["license"]:
         report += f"[{issue_dict['license']['name']}]({issue_dict['license']['url']})\n"
     else:
         report += f"{issue_dict['license']['name']}\n"
