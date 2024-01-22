@@ -232,7 +232,7 @@ def parse_issue(issue):
     
     selection = parse_yes_no_choice(model_output)
     if type(selection) is bool:
-        data_dict["include_model_code"] = selection
+        data_dict["include_model_output"] = selection
     if type(selection) is str:
         error_log += "**Include model output data?**\n" + selection + "\n"
 
