@@ -44,7 +44,7 @@ def get_record(record_type,record_id):
         metadata = response.json()
 
     except requests.exceptions.RequestException as e:
-        log += f"- Error fetching metadata: {e} \n"
+        log += f"Error fetching metadata: {e} \n"
 
     return metadata, log
 
@@ -70,7 +70,7 @@ def parse_author(metadata):
             author_record["affiliation"] = affiliation_list
 
     except Exception as err:
-        log += "- Error: unable to parse author metadata. \n"
+        log += "Error: unable to parse author metadata. \n"
         log += f"`{err}`\n"
 
     return author_record, log
@@ -87,7 +87,7 @@ def parse_organization(metadata):
        }
 
     except Exception as err:
-        log += "- Error: unable to parse organization metadata. \n"
+        log += "Error: unable to parse organization metadata. \n"
         log += f"`{err}`\n"
 
     return org_record, log
@@ -127,7 +127,7 @@ def parse_software(metadata):
 
 
     except Exception as err:
-        log += "- Error: unable to parse software metadata. \n"
+        log += "Error: unable to parse software metadata. \n"
         log += f"`{err}`\n"
 
     return software_record, log
@@ -206,7 +206,7 @@ def parse_publication(metadata):
             publication_record["funder"] = funder_list
 
     except Exception as err:
-        log += "- Error: unable to parse publication metadata. \n"
+        log += "Error: unable to parse publication metadata. \n"
         log += f"`{err}`\n"
 
     return publication_record, log
@@ -361,20 +361,20 @@ def search_organization(org_url):
         result = response.json()
 
     except requests.exceptions.RequestException as e:
-        log += f"- Error fetching metadata: {e} \n"
+        log += f"Error fetching metadata: {e} \n"
 
     # Deal with response and determine ROR ID
     if result["number_of_results"] == 0:
-        log += f"- Unable to find ROR for {org_url} \n"
+        log += f"Unable to find ROR for {org_url} \n"
     elif result["number_of_results"] == 1:
         ror_id = result["items"][0]["id"]
-        log += f"- Found ROR record for {org_url}: {result['items'][0]['name']} ({ror_id}) \n"
+        log += f"Found ROR record for {org_url}: {result['items'][0]['name']} ({ror_id}) \n"
         for relation in result["items"][0]["relationships"]:
             if relation["type"] == "Parent":
                 log += f"Note: This organization has a parent organization: {relation['label']} ({relation['id']}) \n"
     else:
         ror_id = result["items"][0]["id"]
-        log += f"- Found more than one ROR record for {org_url}. Assuming the first result is correct; if not please enter the correct ROR. \n"
+        log += f"Found more than one ROR record for {org_url}. Assuming the first result is correct; if not please enter the correct ROR. \n"
         for record in result["items"]:
             log += f"\t - {record['name']} ({record['id']}) \n"
 
@@ -444,7 +444,7 @@ def parse_image_and_caption(img_string, default_filename):
     image_record["caption"] = "\n".join(caption)
 
     if not caption:
-        log += "- Error: No caption found for image.\n"
+        log += "Error: No caption found for image.\n"
 
     return image_record, log
 
