@@ -582,7 +582,7 @@ def dict_to_report(issue_dict):
 
     # model setup figure
     if "model_setup_figure" in issue_dict:
-        report += "**Landing page image**\n"
+        report += "**Model setup figure**\n"
         if "filename" in issue_dict["model_setup_figure"]:
             report += f"Filename: [{issue_dict['model_setup_figure']['filename']}]({issue_dict['model_setup_figure']['url']})\n"
         if "caption" in issue_dict["model_setup_figure"]:
