@@ -481,7 +481,7 @@ def dict_to_report(issue_dict):
     # software framework authors
     if "author" in issue_dict["software"]:
         report += "**Software framework authors**\n"
-        for author in issue_dict["software"]["authors"]:
+        for author in issue_dict["software"]["author"]:
             if "givenName" in author:
                 report += f"- {author['givenName']} {author['familyName']} "
             elif "name" in author:
