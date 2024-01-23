@@ -557,7 +557,7 @@ def dict_to_report(issue_dict):
     if "landing_image" in issue_dict:
         report += "**Landing page image**\n"
         if "filename" in issue_dict["landing_image"]:
-            report += f"Filename: {issue_dict['landing_image']['filename']}\n"
+            report += f"Filename: [{issue_dict['landing_image']['filename']}]({issue_dict['landing_image']['url']})\n"
         if "caption" in issue_dict["landing_image"]:
             report += f"Caption: {issue_dict['landing_image']['caption']}\n"
         report += '\n'
@@ -566,7 +566,7 @@ def dict_to_report(issue_dict):
     if "animation" in issue_dict:
         report += "**Animation**\n"
         if "filename" in issue_dict["animation"]:
-            report += f"Filename: {issue_dict['animation']['filename']}\n"
+            report += f"Filename: [{issue_dict['animation']['filename']}]({issue_dict['animation']['url']})\n"
         if "caption" in issue_dict["animation"]:
             report += f"Caption: {issue_dict['animation']['caption']}\n"
         report += '\n'
@@ -575,7 +575,7 @@ def dict_to_report(issue_dict):
     if "graphic_abstract" in issue_dict:
         report += "**Graphic abstract**\n"
         if "filename" in issue_dict["graphic_abstract"]:
-            report += f"Filename: {issue_dict['graphic_abstract']['filename']}\n"
+            report += f"Filename: [{issue_dict['graphic_abstract']['filename']}]({issue_dict['graphic_abstract']['url']})\n"
         if "caption" in issue_dict["graphic_abstract"]:
             report += f"Caption: {issue_dict['graphic_abstract']['caption']}\n"
         report += '\n'
@@ -584,7 +584,7 @@ def dict_to_report(issue_dict):
     if "model_setup_figure" in issue_dict:
         report += "**Landing page image**\n"
         if "filename" in issue_dict["model_setup_figure"]:
-            report += f"Filename: {issue_dict['model_setup_figure']['filename']}\n"
+            report += f"Filename: [{issue_dict['model_setup_figure']['filename']}]({issue_dict['model_setup_figure']['url']})\n"
         if "caption" in issue_dict["model_setup_figure"]:
             report += f"Caption: {issue_dict['model_setup_figure']['caption']}\n"
         report += '\n'
