@@ -321,7 +321,7 @@ def parse_issue(issue):
 
     if software_keywords[0] == "_No response_":
         error_log += "**Software & algorithm keywords**\n"
-        error_log += "Warning: no keywords given"
+        error_log += "Warning: no keywords given. \n"
     else:
         software_record["keywords"] = software_keywords
 
