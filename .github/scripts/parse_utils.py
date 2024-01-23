@@ -127,7 +127,7 @@ def parse_issue(issue):
                 error_log += "**Associated Publication**\n" + log1 + log2
         except Exception as err:
             error_log += "**Associated Publication**\n"
-            error_log += f"Error: unable to obtain metadata for DOI {publication_doi} \n"
+            error_log += f"Error: unable to obtain metadata for DOI `{publication_doi}` \n"
             error_log += f"`{err}`\n"
     
     data_dict["publication"] = publication_record
@@ -266,12 +266,12 @@ def parse_issue(issue):
             software_doi = software_doi.split("zenodo.")[1]
             try:
                 software_metadata, log1 = get_record("software", software_doi)
-                software_record, log2 = parse_software(publication_metadata)
+                software_record, log2 = parse_software(software_metadata)
                 if log1 or log2:
                     error_log += "**Software Framework DOI/URI**\n" + log1 + log2
             except Exception as err:
                 error_log += "**Software Framework DOI/URI**\n"
-                error_log += f"Error: unable to obtain metadata for DOI {software_doi} \n"
+                error_log += f"Error: unable to obtain metadata for DOI `{software_doi}` \n"
                 error_log += f"`{err}`\n"
         else:
             error_log += "**Software Framework DOI/URI**\n Non-Zenodo software dois not yet supported\n"
