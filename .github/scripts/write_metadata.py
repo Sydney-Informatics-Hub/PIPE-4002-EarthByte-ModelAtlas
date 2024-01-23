@@ -1,6 +1,7 @@
 import os
 from github import Github, Auth
-from parse_utils import parse_issue, dict_to_metadata
+from parse_utils import parse_issue
+from crosswalks import dict_to_metadata
 
 # Environment variables
 token = os.environ.get("GITHUB_TOKEN")
