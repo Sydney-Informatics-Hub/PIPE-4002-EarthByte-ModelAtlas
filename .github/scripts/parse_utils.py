@@ -4,7 +4,7 @@ import json
 import pandas as pd
 import subprocess
 
-from metadata_utils import get_record, get_authors, parse_author, parse_publication, parse_software, is_orcid_format, check_uri
+from metadata_utils import get_record, get_authors, parse_author, parse_publication, parse_software, is_orcid_format, check_uri, parse_image_and_caption
 
 def parse_name_or_orcid(name_or_orcid):
     error_log = ""
@@ -345,15 +345,61 @@ def parse_issue(issue):
     # Section 4
     #############
     # landing page image and caption
+    img_string = data["-> add landing page image and caption"].strip()
+
+    if img_string == "_No response_":
+        error_log += "**Landing page image**\n"
+        error_log += "Error: No image uploaded.\n\n"
+    else:
+        landing_image_record, log = parse_image_and_caption(img_string, "landing_image")
+        if log:
+            error_log += "**Landing page image**\n" + log + "\n"
+        data_dict["landing_image"] = landing_image_record
 
     # animation
+    img_string = data["-> add an animation (if relevant)"].strip()
+
+    if img_string == "_No response_":
+        error_log += "**Animation**\n"
+        error_log += "Warning: No animation uploaded.\n\n"
+    else:
+        animation_record, log = parse_image_and_caption(img_string, "animation")
+        if log:
+            error_log += "**Animation**\n" + log + "\n"
+        data_dict["animation"] = animation_record
 
     # graphic abstract
+    img_string = data["-> add a graphic abstract figure (if relevant)"].strip()
+
+    if img_string == "_No response_":
+        error_log += "**Graphic abstract**\n"
+        error_log += "Warning: No image uploaded.\n\n"
+    else:
+        graphic_abstract_record, log = parse_image_and_caption(img_string, "graphic_abstract")
+        if log:
+            error_log += "**Graphic abstract**\n" + log + "\n"
+        data_dict["graphic_abstract"] = graphic_abstract_record
 
     # model setup figure
+    img_string = data["-> add a model setup figure (if relevant)"].strip()
+
+    if img_string == "_No response_":
+        error_log += "**Model setup figure**\n"
+        error_log += "Warning: No image uploaded.\n\n"
+    else:
+        model_setup_fig_record, log = parse_image_and_caption(img_string, "model_setup")
+        if log:
+            error_log += "**Model setup figure**\n" + log + "\n"
+        data_dict["model_setup_figure"] = model_setup_fig_record
 
     # description
+    model_description = data["-> add a description of your model setup"].strip()
 
+    if model_description == "_No response_":
+        error_log += "**Model setup description**\n"
+        error_log += "Warning: No description given \n"
+    else:
+        data_dict["model_setup_description"] = model_description
 
 
     return data_dict, error_log
@@ -508,13 +554,47 @@ def dict_to_report(issue_dict):
     #############
     report += "## Section 4: web material (for mate.science) \n"
     # landing page image and caption
-    # animation
-    # graphic abstract
-    # model setup figure
-    # description
-    # associated publication DOI   
+    if "landing_image" in issue_dict:
+        report += "**Landing page image**\n"
+        if "filename" in issue_dict["landing_image"]:
+            report += f"Filename: {issue_dict['landing_image']['filename']}\n"
+        if "caption" in issue_dict["landing_image"]:
+            report += f"Caption: {issue_dict['landing_image']['caption']}\n"
+        report += '\n'
 
-    report += "\n Dumping dictionary during testing"
+    # animation
+    if "animation" in issue_dict:
+        report += "**Animation**\n"
+        if "filename" in issue_dict["animation"]:
+            report += f"Filename: {issue_dict['animation']['filename']}\n"
+        if "caption" in issue_dict["animation"]:
+            report += f"Caption: {issue_dict['animation']['caption']}\n"
+        report += '\n'
+
+    # graphic abstract
+    if "graphic_abstract" in issue_dict:
+        report += "**Graphic abstract**\n"
+        if "filename" in issue_dict["graphic_abstract"]:
+            report += f"Filename: {issue_dict['graphic_abstract']['filename']}\n"
+        if "caption" in issue_dict["graphic_abstract"]:
+            report += f"Caption: {issue_dict['graphic_abstract']['caption']}\n"
+        report += '\n'
+
+    # model setup figure
+    if "model_setup_figure" in issue_dict:
+        report += "**Landing page image**\n"
+        if "filename" in issue_dict["model_setup_figure"]:
+            report += f"Filename: {issue_dict['model_setup_figure']['filename']}\n"
+        if "caption" in issue_dict["model_setup_figure"]:
+            report += f"Caption: {issue_dict['model_setup_figure']['caption']}\n"
+        report += '\n'
+
+    # description
+    if "model_setup_description" in issue_dict:
+        report += "**Model setup description**\n"
+        report += f"{issue_dict['model_setup_description']}\n\n"
+
+    report += "\n ** Dumping dictionary during testing **\n"
     report += str(issue_dict)
 
     return report
