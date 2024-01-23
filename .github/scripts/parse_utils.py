@@ -4,7 +4,7 @@ import json
 import pandas as pd
 import subprocess
 
-from metadata_utils import get_record, get_authors, parse_author, parse_publication, is_orcid_format, check_uri
+from metadata_utils import get_record, get_authors, parse_author, parse_publication, parse_software, is_orcid_format, check_uri
 
 def parse_name_or_orcid(name_or_orcid):
     error_log = ""
@@ -257,7 +257,7 @@ def parse_issue(issue):
     software_doi = data["-> software framework DOI/URI"].strip()
 
     software_record={"@type": "SoftwareApplication"}
-    
+
     if software_doi == "_No response_":
         error_log += "**Software Framework DOI/URI**\n"
         error_log += "Warning: no DOI/URI provided.\n"
