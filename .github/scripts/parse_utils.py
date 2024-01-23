@@ -256,10 +256,11 @@ def parse_issue(issue):
     # software framework DOI/URI
     software_doi = data["-> software framework DOI/URI"].strip()
 
+    software_record={"@type": "SoftwareApplication"}
+    
     if software_doi == "_No response_":
         error_log += "**Software Framework DOI/URI**\n"
         error_log += "Warning: no DOI/URI provided.\n"
-        software_record={"@type": "SoftwareApplication"}
     else:
         if "zenodo" in software_doi:
             software_doi = software_doi.split("zenodo.")[1]
