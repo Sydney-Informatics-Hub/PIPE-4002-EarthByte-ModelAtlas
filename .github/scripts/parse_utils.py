@@ -254,17 +254,91 @@ def parse_issue(issue):
     # Section 3
     #############
     # software framework DOI/URI
+    software_doi = data["-> software framework DOI/URI"].strip()
+
+    if software_doi == "_No response_":
+        error_log += "**Software Framework DOI/URI**\n"
+        error_log += "Warning: no DOI/URI provided.\n"
+        software_record={"@type": "SoftwareApplication"}
+    else:
+        if "zenodo" in software_doi:
+            software_doi = software_doi.split("zenodo.")[1]
+            try:
+                software_metadata, log1 = get_record("software", software_doi)
+                software_record, log2 = parse_software(publication_metadata)
+                if log1 or log2:
+                    error_log += "**Software Framework DOI/URI**\n" + log1 + log2
+            except Exception as err:
+                error_log += "**Software Framework DOI/URI**\n"
+                error_log += f"Error: unable to obtain metadata for DOI {software_doi} \n"
+                error_log += f"`{err}`\n"
+        else:
+            error_log += "**Software Framework DOI/URI**\n Non-Zenodo software dois not yet supported\n"
 
     # software framework source repository
+    software_repo = data["-> software framework source repository"].strip()
+
+    if software_repo == "_No response_":
+        error_log += "**Software Repository**\n"
+        error_log += "Warning: no repository URL provided. \n"
+    else:
+        response = check_uri(software_repo)
+        if response == "OK":
+            software_record["codeRepository"] = software_repo
+        else:
+            error_log += "**Software Repository**\n" + response + "\n"
 
     # name of primary software framework
+    software_name = data["-> name of primary software framework (e.g. Underworld, ASPECT, Badlands, OpenFOAM)"].strip()
+
+    if software_name == "_No response_":
+        try:
+            software_name = software_record['name']
+        except:
+            error_log += "**Name of primary software framework**\n"
+            error_log += "Error: no name found \n"
+    else:
+        software_record["name"] = software_name     # N.B. this will overwrite any name obtained from the DOI
 
     # software framework authors
+    authors = data['-> software framework authors'].strip().split('\r\n')
+
+    if authors[0] == "_No response_":
+        try:
+            software_author_list = software_record["author"]
+        except:
+            software_author_list = []
+            error_log += "**Software framework authors**\n"
+            error_log += "Error: no authors found \n"
+    else:
+        software_author_list, log = get_authors(authors)
+        software_record["author"] = software_author_list     # N.B. this will overwrite any name obtained from the DOI
+        if log:
+            error_log += "**Software framework authors**\n" + log
 
     # software & algorithm keywords
+    software_keywords = [x.strip() for x in data["-> software & algorithm keywords"].split(",")]
+
+    if software_keywords[0] == "_No response_":
+        error_log += "**Software & algorithm keywords**\n"
+        error_log += "Warning: no keywords given"
+    else:
+        software_record["keywords"] = software_keywords
+
+    data_dict["software"] = software_record
 
     # computer URI/DOI
+    computer_uri = data["-> computer URI/DOI"].strip()
 
+    if computer_uri == "_No response_":
+        error_log += "**Computer URI/DOI**\n"
+        error_log += "Warning: No URI/DOI provided. \n"
+    else:
+        response = check_uri(computer_uri)
+        if response == "OK":
+            data_dict["computer_uri"] = computer_uri
+        else:
+            error_log += "**Computer URI/DOI**\n" + response + "\n"
 
     #############
     # Section 4
@@ -278,8 +352,6 @@ def parse_issue(issue):
     # model setup figure
 
     # description
-
-    # associated publication DOI
 
 
 
@@ -386,16 +458,49 @@ def dict_to_report(issue_dict):
         report += "**Model output URI/DOI** \n"
         report += f"{issue_dict['model_output_uri']} \n\n"
 
-     #############
+    #############
     # Section 3
     #############
     report += "## Section 3: software framework and compute details \n"
     # software framework DOI/URI
+    if "@id" in issue_dict["software"]:
+        report += "**Software Framework DOI/URI**\n"
+        report += f"Found software: _[{issue_dict['software']['name']}]({issue_dict['software']['@id']})_ \n\n"
+
     # software framework source repository
+    if "codeRepository" in issue_dict["software"]:
+        report += "**Software Repository** \n"
+        report += f"{issue_dict['software']['codeRepository']} \n\n"
+
     # name of primary software framework
+    if "name" in issue_dict["software"]:
+        report += "**Name of primary software framework**\n"
+        report += f"{issue_dict['software']['name']}"
+
     # software framework authors
+    if "author" in issue_dict["software"]:
+        report += "**Software framework authors**\n"
+        for author in issue_dict["software"]["authors"]:
+            if "givenName" in author:
+                report += f"- {author['givenName']} {author['familyName']} "
+            elif "name" in author:
+                report += f"- {author['name']} "
+            if "@id" in author:
+                report += f"([{author['@id'].split('/')[-1]}]({author['@id']}))"
+            report += "\n"
+        report += "\n"
+
     # software & algorithm keywords
+    if "keywords" in issue_dict["software"]:
+        report += "**Software & algorithm keywords**\n"
+        for keyword in issue_dict["software"]["keywords"]:
+            report += f"- {keyword} \n"
+        report += "\n"
+
     # computer URI/DOI
+    if "computer_uri" in issue_dict:
+        report += "**Computer URI/DOI** \n"
+        report += f"{issue_dict['computer_uri']} \n\n"
 
     #############
     # Section 4
