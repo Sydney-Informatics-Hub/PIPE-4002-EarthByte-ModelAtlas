@@ -476,7 +476,7 @@ def dict_to_report(issue_dict):
     # name of primary software framework
     if "name" in issue_dict["software"]:
         report += "**Name of primary software framework**\n"
-        report += f"{issue_dict['software']['name']}"
+        report += f"{issue_dict['software']['name']} \n\n"
 
     # software framework authors
     if "author" in issue_dict["software"]:
