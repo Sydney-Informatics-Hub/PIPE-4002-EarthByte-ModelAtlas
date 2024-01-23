@@ -4,6 +4,7 @@ from habanero import Crossref
 import orcid
 import requests
 import filetype
+from filetypes import Svg
 
 base_urls = {
     "publication": "https://api.crossref.org/works/",
@@ -12,20 +13,6 @@ base_urls = {
     "author": "https://pub.orcid.org/v3.0/"
 }
 
-# Hack to suport SVG files
-# Need to tidy this up, and are there any other files that filetype doesn't natively recognise?
-class Svg(filetype.Type):
-    MIME = 'image/svg+xml'
-    EXTENSION = 'svg'
-
-    def __init__(self):
-        super(Svg, self).__init__(
-            mime = Svg.MIME,
-            extension = Svg.EXTENSION
-            )
-
-    def match(self, buf):
-        return False
 
 def get_record(record_type,record_id):
     log = ""
@@ -430,7 +417,7 @@ def parse_image_and_caption(img_string, default_filename):
                 elif "src" in string:
                     image_record = re.search(html_regex, string).groupdict()
                 else:
-                    log += "Could not parse image file and caption\n"
+                    log += "Error: Could not parse image file and caption\n"
         else:
             caption.append(string)
 
