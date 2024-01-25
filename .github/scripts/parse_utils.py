@@ -11,22 +11,22 @@ def parse_name_or_orcid(name_or_orcid):
 
     if is_orcid_format(name_or_orcid):
         orcid_record, log1 = get_record("author", name_or_orcid)
-        creator_record, log2 = parse_author(orcid_record)
+        author_record, log2 = parse_author(orcid_record)
         if log1 or log2:
             error_log += log1 + log2
     else:
         try:
             familyName, givenName = name_or_orcid.split(",")
-            creator_record = {
+            author_record = {
                 "@type": "Person",
                 "givenName": givenName,
                 "familyName": familyName,
             }
         except:
             error_log += f"- Error: name `{name_or_orcid}` in unexpected format. Expected `last name(s), first name(s)` or ORCID. \n"
-            creator_record = {}
+            author_record = {}
 
-    return creator_record, error_log
+    return author_record, error_log
 
 def parse_yes_no_choice(input):
     if "X" in input[0] and "X" in input[1]:

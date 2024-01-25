@@ -296,34 +296,15 @@ def get_authors(author_list):
 
     '''
 
-    orcid_pattern = re.compile(r'\d{4}-\d{4}-\d{4}-\d{3}[0-9X]')
-
     log = ""
     authors = []
 
     for author in author_list:
-        if orcid_pattern.fullmatch(author):
-            try:
-                record, get_log = get_record("author", author)
-                author_record, parse_log = parse_author(record)
-                if get_log or parse_log:
-                    log += get_log + parse_log
-                else:
-                    authors.append(author_record)
-            except Exception as err:
-                log += "Error: unable to find ORCID iD. Check you have entered it correctly. \n"
-                log += f"`{err}`\n"
-        else:
-            try:
-                familyName, givenName = author.split(",")
-                author_record = {
-                    "@type": "Person",
-                    "givenName": givenName,
-                    "familyName": familyName,
-                }
-                authors.append(author_record)
-            except:
-                log += f"Error: author name `{author}` in unexpected format. Expected `last name(s), first name(s)`. \n"
+        author_record, error_log = parse_name_or_orcid(author)
+        if author_record:
+            authors.append(author_record)
+        if error_log:
+            log += error_log
 
     return authors, log
 
