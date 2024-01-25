@@ -1,6 +1,5 @@
 import os
 import re
-from habanero import Crossref
 import orcid
 import requests
 import filetype
@@ -198,80 +197,6 @@ def parse_publication(metadata):
 
     return publication_record, log
 
-
-def get_crossref_article(doi):
-    '''
-    Returns metadata from Crossref for a given doi
-
-        Parameters:
-            doi (string): Digital Object Identifier of a publication
-
-        Returns:
-            metadata (dict): dictionary of publication metadata
-
-    '''
-
-    cr = Crossref()
-
-    output = cr.works(ids = doi)["message"]
-
-    metadata = {
-        "@type": "ScholarlyArticle",
-        "isPartOf": {
-            "@type": "PublicationIssue",
-            "issueNumber": output["issue"],
-            "datePublished": '-'.join(map(str,output["published"]["date-parts"][0])),
-            "isPartOf": {
-                "@type": [
-                    "PublicationVolume",
-                    "Periodical"
-                ],
-                "name": output["container-title"],
-                "issn": output["ISSN"],
-                "volumeNumber": output["volume"],
-                "publisher": output["publisher"]
-            },
-        },
-        "sameAs": doi,
-        "name": output["title"][0],
-    }
-
-    author_list = []
-
-    for author in output["author"]:
-        author_record = {"@type": "Person"}
-        if "ORCID" in author:
-            author_record["@id"] = author["ORCID"]
-        author_record["givenName"] = author["given"]
-        author_record["familyName"] = author["family"]
-
-        affiliation_list = []
-        for affiliation in author["affiliation"]:
-            affiliation_list.append({"@type": "Organization", "name": affiliation["name"]})
-
-        author_record["affiliation"] = affiliation_list
-
-        author_list.append(author_record)
-
-    metadata["author"] = author_list
-
-    if "abstract" in output:
-        metadata["abstract"] = output["abstract"]
-
-    if "page" in output:
-        metadata["pagination"] = output["page"]
-
-    if "alternative-id" in output:
-        metadata["identifier"] = output["alternative-id"]
-
-    if "funder" in output:
-        funder_list = []
-        for funder in output["funder"]:
-            funder_list.append({"@type": "Organization", "name": funder["name"]})
-        metadata["funder"] = funder_list
-
-
-    return metadata
 
 def is_orcid_format(author):
 
