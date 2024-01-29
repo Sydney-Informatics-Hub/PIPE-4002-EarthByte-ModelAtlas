@@ -235,6 +235,12 @@ def apply_entity_mapping(metadata, mapping, issue_dict, graph_index):
         else:
             metadata['@graph'][graph_index][key] = issue_dict[mapping[key]]
 
+
+
+
+
+
+
 def load_crate_template(metadata_template_url="https://raw.githubusercontent.com/ModelAtlasofTheEarth/metadata_schema/main/mate_ro_crate/ro-crate-metadata.json"):
     
     """
@@ -256,5 +262,27 @@ def load_crate_template(metadata_template_url="https://raw.githubusercontent.com
     except requests.exceptions.RequestException as e:
         print(f"Failed to download the file. Error: {e}")
         return None
-        
+    
+    
+
+def load_entity_template(entity_template_url="https://raw.githubusercontent.com/ModelAtlasofTheEarth/metadata_schema/main/mate_ro_crate/type_templates.json"):
+    """
+    Downloads a JSON-LD entity template from the specified URL and returns it as a dictionary.
+
+    Parameters:
+    - entity_template_url (str): URL to the JSON-LD entity template.
+
+    Returns:
+    - dict: The loaded entity template as a dictionary, or None if an error occurs.
+    """
+    
+    try:
+        response = requests.get(entity_template_url)
+        response.raise_for_status()  # Raises an HTTPError for bad HTTP responses
+        entity_template = json.loads(response.text)
+        print("JSON-LD data loaded successfully.")
+        return entity_template
+    except requests.exceptions.RequestException as e:
+        print(f"Failed to download the file. Error: {e}")
+        return None
   
