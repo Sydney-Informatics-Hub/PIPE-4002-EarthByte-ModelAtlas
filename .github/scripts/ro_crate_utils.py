@@ -267,7 +267,7 @@ def dict_to_ro_crate_mapping(crate, issue_dict,  mapping_list):
 
     for i, mapping in enumerate(mapping_list):
 
-        apply_entity_mapping(metadata, 
+        apply_entity_mapping(crate, 
                              mapping, issue_dict, graph_index=i+1)
 
 
