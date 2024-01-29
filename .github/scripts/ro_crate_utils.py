@@ -230,5 +230,27 @@ def apply_entity_mapping(metadata, mapping, issue_dict, graph_index):
 
         else:
             metadata['@graph'][graph_index][key] = issue_dict[mapping[key]]
+
+def load_crate_template(metadata_template_url="https://raw.githubusercontent.com/ModelAtlasofTheEarth/metadata_schema/main/mate_ro_crate/ro-crate-metadata2.json"):
+    
+    """
+    Downloads the M@TE RO-Crate metadata template from a specified URL and returns it as a dictionary.
+
+    Parameters:
+    - metadata_template_url (str): URL to the JSON-LD metadata template.
+
+    Returns:
+    - dict: The loaded metadata template as a dictionary, or None if an error occurs.
+    """
+    
+    try:
+        response = requests.get(metadata_template_url)
+        response.raise_for_status()  # Raises an HTTPError if the HTTP request returned an unsuccessful status code
+        crate = json.loads(response.text)
+        print("JSON-LD data loaded successfully.")
+        return crate
+    except requests.exceptions.RequestException as e:
+        print(f"Failed to download the file. Error: {e}")
+        return None
         
   
