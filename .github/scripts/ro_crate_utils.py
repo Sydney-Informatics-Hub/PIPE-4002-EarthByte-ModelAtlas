@@ -231,7 +231,7 @@ def apply_entity_mapping(metadata, mapping, issue_dict, graph_index):
         else:
             metadata['@graph'][graph_index][key] = issue_dict[mapping[key]]
 
-def load_crate_template(metadata_template_url="https://raw.githubusercontent.com/ModelAtlasofTheEarth/metadata_schema/main/mate_ro_crate/ro-crate-metadata2.json"):
+def load_crate_template(metadata_template_url="https://raw.githubusercontent.com/ModelAtlasofTheEarth/metadata_schema/main/mate_ro_crate/ro-crate-metadata.json"):
     
     """
     Downloads the M@TE RO-Crate metadata template from a specified URL and returns it as a dictionary.
