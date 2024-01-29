@@ -214,5 +214,21 @@ def search_replace_sub_dict(crate, graph_index):
             
         else:
             pass
+
+
+
+def apply_entity_mapping(metadata, mapping, issue_dict, graph_index):
+    
+    """
+    apply a mapping from the issue dictionary into the entity dictionary stored at the node of the 
+    @graph array given by graph_index
+    """
+    
+    for key in mapping.keys():
+        if mapping[key] is None:
+            pass
+
+        else:
+            metadata['@graph'][graph_index][key] = issue_dict[mapping[key]]
         
   
