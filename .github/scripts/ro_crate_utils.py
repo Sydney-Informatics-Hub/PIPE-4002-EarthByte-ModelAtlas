@@ -236,6 +236,39 @@ def apply_entity_mapping(metadata, mapping, issue_dict, graph_index):
             metadata['@graph'][graph_index][key] = issue_dict[mapping[key]]
 
 
+def dict_to_ro_crate_mapping(crate, issue_dict,  mapping_list):
+    
+    """
+    This function apply a mappign between a dictionary that captures key model submission data 
+    and a sey of dictionaries that represent the entities in an RO-Crate
+    
+
+    Parameters:
+    
+    crate: ro_crate as Python dictionary 
+    issue_dict: the dictionary produced by parse_issue.puy 
+    mapping_list: a list of dictionaries that define mappings between issue_dict and 
+    entities in the crate
+
+
+    Returns:
+    None: Changes to crate occur in-place
+    
+    """
+
+    
+    ####################
+    ##Apply mapping
+    ####################
+    
+    #the relationship between the entity and the index 
+    #is only valid before the graph has been flattened
+    
+
+    for i, mapping in enumerate(mapping_list):
+
+        apply_entity_mapping(metadata, 
+                             mapping, issue_dict, graph_index=i+1)
 
 
 
