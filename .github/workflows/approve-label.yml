@@ -52,7 +52,7 @@ jobs:
       - name: Verify Labeler
         id: verify_labeler
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.PAT }}
         run: |
           echo "create_repo=true" >> $GITHUB_OUTPUT
           ALLOWED_USERS="not_hvidy"
