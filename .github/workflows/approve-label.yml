@@ -45,8 +45,23 @@ jobs:
           recipients: review requested=@hvidy
           message: 'A review of this submission has been requested from {recipients}'
 
-  createNewRepo:
+  createRepoAuthorization:
     if: contains(github.event.label.name, 'approved')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify Labeler
+        id: verify_labeler
+        run: |
+          ALLOWED_USERS="hvidy"
+          if [[ ! "$ALLOWED_USERS" =~ "${{ github.event.sender.login }}"]]; then
+            echo "Error: User not allowed to add approved label."
+            echo "::remove-label name='approved'"
+            echo "::set-output name=create-repo::false"
+          fi
+
+  createNewRepo:
+    needs: createRepoAuthorization
+    if: ${{ needs.createRepoAuthorization.outputs['verify_labeler.create-repo'] != 'false' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
