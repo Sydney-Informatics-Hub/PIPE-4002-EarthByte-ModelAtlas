@@ -58,7 +58,7 @@ jobs:
 
           USER_ALLOWED=false
           for ALLOWED_USER in "${ALLOWED_USERS_ARRAY[@]}"; do
-            if [ "$ALLOWED_USER" == "${github.event.sender.login}" ]]; then
+            if [ "$ALLOWED_USER" == "${{ github.event.sender.login }}" ]]; then
               USER_ALLOWED=true
               break
             fi
