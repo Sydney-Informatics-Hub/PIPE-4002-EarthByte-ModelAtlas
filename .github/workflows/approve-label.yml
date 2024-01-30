@@ -53,7 +53,10 @@ jobs:
         id: verify_labeler
         run: |
           ALLOWED_USERS="not_hvidy"
-          if [[ ! "$ALLOWED_USERS" =~ "${{ github.event.sender.login }}" ]]; then
+
+          IFS=',' read -ra ALLOWED_USERS_ARRAY <<< "$ALLOWED_USERS"
+
+          if [[ ! "${ALLOWED_USERS_ARRAY[@]}" =~ "${{ github.event.sender.login }}" ]]; then
             echo "Error: User not allowed to add approved label."
             echo "::remove-label name='approved'"
             echo "::set-output name=create-repo::false"
