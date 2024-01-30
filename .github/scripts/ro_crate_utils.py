@@ -224,19 +224,64 @@ def search_replace_sub_dict(crate, graph_index):
 
 
 
-def apply_entity_mapping(metadata, mapping, issue_dict, graph_index):
-    
-    """
-    apply a mapping from the issue dictionary into the entity dictionary stored at the node of the 
-    @graph array given by graph_index
-    """
-    
-    for key in mapping.keys():
-        if mapping[key] is None:
-            pass
+#def apply_entity_mapping(metadata, mapping, issue_dict, graph_index):
+#    
+#    """
+#    apply a mapping from the issue dictionary into the entity dictionary stored at the node of the 
+#    @graph array given by graph_index
+#    """
+#    
+#    for key in mapping.keys():
+#        if mapping[key] is None:
+#            pass
+#
+#        else:
+#            metadata['@graph'][graph_index][key] = issue_dict[mapping[key]]
 
-        else:
-            metadata['@graph'][graph_index][key] = issue_dict[mapping[key]]
+
+def apply_entity_mapping(metadata, mapping, issue_dict, graph_index):
+    """
+    Updates a specific entity within the metadata's @graph array using values from an issue dictionary, 
+    based on a provided mapping. This function iterates over the mapping dictionary, where each key-value 
+    pair represents a target entity attribute and its corresponding attribute in the issue dictionary. 
+    If the key exists in the issue dictionary, the function updates the target entity's attribute with the 
+    value from the issue dictionary. If a mapping value is None or the key does not exist in the issue dictionary, 
+    the corresponding attribute in the target entity is left unchanged.
+
+    This version of the function skips mappings for non-existent keys in the issue_dict without raising exceptions, 
+    allowing for partial updates.
+
+    Parameters:
+    - metadata (dict): The metadata structure containing an '@graph' key with a list of entities.
+    - mapping (dict): A dictionary where each key represents an attribute in the target entity within 
+                      the metadata's '@graph' array, and each value corresponds to an attribute in the 
+                      issue_dict. A value of None or a non-existent key results in no update for that attribute.
+    - issue_dict (dict): A dictionary containing data that should be mapped to the target entity in the 
+                         metadata's '@graph' array.
+    - graph_index (int): The index of the target entity within the metadata's '@graph' array to which the 
+                         mapping should be applied.
+
+    Returns:
+    None: The function updates the metadata in place and does not return a value.
+    """
+
+    # Validate metadata structure and graph_index
+    if '@graph' not in metadata or not isinstance(metadata['@graph'], list):
+        print("Warning: The provided metadata must contain an '@graph' key with a list of entities.")
+        return
+    if graph_index >= len(metadata['@graph']):
+        print(f"Warning: graph_index {graph_index} is out of range for the metadata's '@graph' array.")
+        return
+
+    # Iterate over the mapping and apply updates where possible
+    for target_key, issue_key in mapping.items():
+        if issue_key is None or issue_key not in issue_dict:
+            # Skip mapping if issue_key is None or not found in the issue_dict
+            continue
+
+        # Safely update the target entity in the metadata
+        metadata['@graph'][graph_index][target_key] = issue_dict[issue_key]
+
 
 
 def dict_to_ro_crate_mapping(crate, issue_dict,  mapping_list):
