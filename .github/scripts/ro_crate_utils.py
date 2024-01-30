@@ -192,7 +192,8 @@ def search_replace_sub_dict(crate, graph_index):
                 at_id = json_dict[key]['@id']
             if len(json_dict[key].keys()) > 1:
                 if at_id not in current_ids:
-                    crate['@graph'].append(json_dict[key])
+                    #dict() is necessary to make a copy not a reference
+                    crate['@graph'].append(dict(json_dict[key]))
                     
                 #replace local dict with @id
                 [json_dict[key].pop(k) for k in list(json_dict[key].keys()) if k != '@id']
@@ -213,7 +214,8 @@ def search_replace_sub_dict(crate, graph_index):
                         at_id = json_dict[key][j]['@id']
                     if len(json_dict[key][j].keys()) > 1:                
                         if at_id not in current_ids:
-                            crate['@graph'].append(json_dict[key][j])
+                            #the dict() is necessary to make a copy not a reference
+                            crate['@graph'].append(dict(json_dict[key][j]))
                     #replace local dict with @id
                     [json_dict[key][j].pop(k) for k in list(json_dict[key][j].keys()) if k != '@id']
             
