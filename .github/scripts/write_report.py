@@ -1,6 +1,6 @@
 import os
 from github import Github, Auth
-from parse_utils import parse_issue
+from parse_issue import parse_issue
 from crosswalks import dict_to_report
 
 # Environment variables

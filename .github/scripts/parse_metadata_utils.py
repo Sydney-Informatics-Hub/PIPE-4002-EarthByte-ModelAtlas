@@ -1,12 +1,3 @@
-import os
-import re
-import requests
-import filetype
-from filetypes import Svg
-
-from request_utils import get_record, search_organization
-
-
 def parse_author(metadata):
     log = ""
     author_record = {}

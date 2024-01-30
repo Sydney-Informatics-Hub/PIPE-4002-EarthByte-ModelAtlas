@@ -1,432 +1,376 @@
 import os
 import re
-import requests
 import subprocess
 import pandas as pd
-from github import Github, Auth
 
-from metadata_utils import get_authors, is_orcid_format, get_record, parse_author, parse_publication, parse_software, get_funders, parse_image_and_caption
-
-token = os.environ.get("GITHUB_TOKEN")
-issue_number = int(os.environ.get("ISSUE_NUMBER"))
-
-parse_log = "Thank you for submitting. Please check the output below, and fix any errors, etc.\n\n"
-
-# Get issue
-auth = Auth.Token(token)
-g = Github(auth=auth)
-repo = g.get_repo("hvidy/PIPE-4002-EarthByte-ModelAtlas")
-issue = repo.get_issue(number = issue_number)
+from request_utils import get_record, check_uri
+from parse_metadata_utils import parse_publication, parse_software
+from parse_utils import parse_name_or_orcid, parse_yes_no_choice, get_authors, get_funders, parse_image_and_caption
 
 
-# Parse issue body
-# Identify headings and subsequent text
-regex = r"### *(?P<key>.*?)\s*[\r\n]+(?P<value>[\s\S]*?)(?=###|$)"
-data = dict(re.findall(regex, issue.body))
+def parse_issue(issue):
+    error_log = ""
 
-#############
-# Section 1
-#############
+    # Parse issue body
+    # Identify headings and subsequent text
+    regex = r"### *(?P<key>.*?)\s*[\r\n]+(?P<value>[\s\S]*?)(?=###|$)"
+    data = dict(re.findall(regex, issue.body))
 
-# Creator/contributor
-parse_log += '**Creator/Contributor**\n'
+    data_dict = {}
 
-creator = data["-> creator/contributor ORCID (or name)"].strip()
+    #############
+    # Section 1
+    #############
+    # creator/contributor
+    creator = data["-> creator/contributor ORCID (or name)"].strip()
+    creator_record, log = parse_name_or_orcid(creator)
+    data_dict["creator"] = creator_record
+    if log:
+        error_log += "**Creator/Contributor**\n" + log +"\n"
 
-if is_orcid_format(creator):
-    orcid_record,log1 = get_record("author", creator)
-    creator_record, log2 = parse_author(orcid_record)
-    if log1 or log2:
-        parse_log += log1 + log2
-    else:
-        parse_log += f"Creator/contributor is {creator_record['givenName']} {creator_record['familyName']} ({creator_record['@id']})\n"
-else:
+    # slug
+    proposed_slug = data["-> slug"].strip()
+    cmd = "python3 .github/scripts/generate_identifier.py"
     try:
-        familyName, givenName = author.split(",")
-        creator_record = {
-            "@type": "Person",
-            "givenName": givenName,
-            "familyName": familyName,
-        }
-        parse_log += f"Creator/contributor is {creator_record['givenName']} {creator_record['familyName']}\n"
-    except:
-        log += f"- Error: creator name `{author}` in unexpected format. Expected `last name(s), first name(s)` or ORCID. \n"
-
-parse_log += "\n"
-
-
-# Verify repo name can be created
-parse_log += "**Model Repository Slug**\n"
-
-proposed_slug = data["-> slug"].strip()
-cmd = "python3 .github/scripts/generate_identifier.py"
-try:
-    slug = subprocess.check_output(cmd, shell=True, text=True, stderr=open(os.devnull)).strip()
-    if proposed_slug != slug:
-        parse_log += f"Warning: Model repo cannot be created with proposed slug `{proposed_slug}`. \n"
-        parse_log += f"Either propose a new slug or repo will be created with name `{slug}`. \n" 
-    else:
-        parse_log += f"Model repo will be created with name `{slug}` \n"
-except Exception as err:
-    parse_log += "- Unable to create valid repo name... \n"
-    parse_log += f"`{err}`\n"
-
-parse_log += "\n"
-
-
-# FoR codes
-parse_log += "**Field of Research (FoR) Codes**\n"
-
-for_codes = [x.strip() for x in data["-> field of Research (FoR) Codes"].split(",")]
-for_code_ref = pd.read_csv(".github/scripts/for_codes.csv", dtype=str)
-
-about_record = []
-for for_code in for_codes:
-    record = for_code_ref.loc[for_code_ref["code"] == for_code]
-    if record.empty:
-        parse_log += f"- Error: FoR code `{for_code}` not found \n"
-    else:
-        for_id = "#FoR_"+record.code.values[0]
-        about_record.append({"@id": for_id, "@type": "DefinedTerm", "name": record.name.values[0]})
-        parse_log += f"- `{for_code}`: {record.name.values[0]} \n"
-
-parse_log += "\n"
-
-
-# License
-parse_log += "**License**\n"
-
-license_lut = pd.read_csv(".github/scripts/licenses.csv", dtype=str)
-
-license = data["-> license"].strip()
-
-if license != "None":
-    license_name = license_lut[license_lut.license == license].name.values[0]
-    license_url = license_lut[license_lut.license == license].url.values[0]
-
-    parse_log += f"[{license_name}]({license_url})\n"
-else:
-    parse_log += "No license \n"
-
-parse_log += "\n"
-
-
-# Model category
-parse_log += "**Model category**\n"
-
-model_categories = [x.strip() for x in data["-> model category"].split(",")]
-for model_category in model_categories:
-    parse_log += f"- {model_category} \n"
-
-parse_log += "\n" 
-
-
-# Associated Publication
-parse_log += "**Associated Publication**\n"
-
-publication_doi = data["-> associated publication DOI"].strip()
-
-if publication_doi == "_No response_":
-    parse_log += "No DOI provided. \n"
-else:
-    try:
-        publication_metadata, log1 = get_record("publication", publication_doi)
-        publication_record, log2 = parse_publication(publication_metadata)
-        if log1 or log2:
-            parse_log += log1 + log2
-        else:
-            parse_log += f"Found publication: _{publication_record['name']}_. \n"
+        slug = subprocess.check_output(cmd, shell=True, text=True, stderr=open(os.devnull)).strip()
+        data_dict["slug"] = slug
+        if proposed_slug != slug:
+            error_log += "**Model Repository Slug**\n"
+            error_log += f"Warning: Model repo cannot be created with proposed slug `{proposed_slug}`. \n"
+            error_log += f"Either propose a new slug or repo will be created with name `{slug}`. \n" 
     except Exception as err:
-        parse_log += f"- Error: unable to obtain metadata for DOI {publication_doi} \n"
-        parse_log += f"`{err}`\n"
+        data_dict["slug"] = ""
+        error_log += "**Model Repository Slug**\n"
+        error_log += "Error: Unable to create valid repo name... \n"
+        error_log += f"`{err}`\n"
 
-parse_log += "\n"
+    # FoR codes
+    for_codes = [x.strip() for x in data["-> field of Research (FoR) Codes"].split(",")]
+    for_code_lut = pd.read_csv(".github/scripts/for_codes.csv", dtype=str)
 
-# Title
-parse_log += "**Title**\n"
+    about_record = []
+    for for_code in for_codes:
+        record = for_code_lut.loc[for_code_lut["code"] == for_code]
+        if record.empty:
+            error_log += "**Field of Research (FoR) Codes**\n"
+            error_log += f"Error: FoR code `{for_code}` not found in look-up table\n"
+        else:
+            for_id = "#FoR_"+record.code.values[0]
+            about_record.append({"@id": for_id, "@type": "DefinedTerm", "name": record.name.values[0]})
+    data_dict["for_codes"] = about_record
 
-title = data["-> title"].strip()
+    # license
+    license = data["-> license"].strip()
+    license_lut = pd.read_csv(".github/scripts/licenses.csv", dtype=str)
 
-if title == "_No response_":
-    try:
-        title = publication_record['name']
-        parse_log += "_Title taken from associated publication_ \n"
-    except:
-        title = ""
-        parse_log += "- Error: no title found \n"
-
-parse_log += title + "\n \n"
-
-# Description
-parse_log += "**Description**\n"
-
-description = data["-> description"].strip()
-
-if description == "_No response_":
-    try:
-        description = publication_record['abstract']
-        parse_log += "_Description taken from associated publication abstract_ \n"
-    except:
-        description = ""
-        parse_log += "- Error: no descrition found, nor abstract for associated publication \n"
-
-parse_log += description + "\n \n"
-
-
-# Identify authors
-parse_log += "**Model authors**\n"
-
-authors = data['-> model authors'].strip().split('\r\n')
-
-if authors[0] == "_No response_":
-    try:
-        author_list = publication_record["author"]
-        parse_log += "_Author list taken from associated publication_ \n"
-    except:
-        author_list = []
-        parse_log += "- Error: no authors found \n"
-else:
-    author_list, log = get_authors(authors)
-    parse_log += log
-
-parse_log += "\n"
-parse_log += "The following author(s) were found successfully:\n"
-for author in author_list:
-    if "@id" in author:
-        parse_log += f"- {author['givenName']} {author['familyName']} ({author['@id']})\n"
+    license_record = {}
+    if license != "No license":
+        license_record["name"] = license_lut[license_lut.license == license].name.values[0]
+        license_record["url"] = license_lut[license_lut.license == license].url.values[0]
     else:
-        parse_log += f"- {author['givenName']} {author['familyName']}\n"
-parse_log += "\n"
+        license_record["name"] = "No license"
+    data_dict["license"] = license_record
+
+    # model category
+    model_category = [x.strip() for x in data["-> model category"].split(",")]
+
+    if model_category[0] == "_No response_":
+        model_category = []
+        error_log += "**Model category**\n"
+        error_log += "Warning: No category selected \n"
+
+    data_dict["model_category"] = model_category
 
 
-# Scientific Keywords
-parse_log += "**Scientific keywords**\n"
+    # associated publication DOI
+    publication_doi = data["-> associated publication DOI"].strip()
+    publication_record = {}
 
-keywords = [x.strip() for x in data["-> scientific keywords"].split(",")]
-if keywords[0] == "_No response_":
-    parse_log += "No keywords given"
-else:
-    for keyword in keywords:
-        parse_log += f"- {keyword} \n"
-parse_log += "\n" 
+    if publication_doi == "_No response_":
+        error_log += "**Associated Publication**\n"
+        error_log += "Warning: No DOI provided. \n"
+    else:
+        try:
+            publication_metadata, log1 = get_record("publication", publication_doi)
+            publication_record, log2 = parse_publication(publication_metadata)
+            if log1 or log2:
+                error_log += "**Associated Publication**\n" + log1 + log2
+        except Exception as err:
+            error_log += "**Associated Publication**\n"
+            error_log += f"Error: unable to obtain metadata for DOI `{publication_doi}` \n"
+            error_log += f"`{err}`\n"
+    
+    data_dict["publication"] = publication_record
+
+    # title
+    title = data["-> title"].strip()
+
+    if title == "_No response_":
+        try:
+            title = publication_record['name']
+        except:
+            title = ""
+            error_log += "**Title**\n"
+            error_log += "Error: no title found \n"
+
+    data_dict["title"] = title
+
+    # description
+    description = data["-> description"].strip()
+
+    if description == "_No response_":
+        try:
+            description = publication_record['abstract']
+        except:
+            description = ""
+            error_log += "**Description**\n"
+            error_log += "Error: no descrition found, nor abstract for associated publication \n"
+
+    data_dict["description"] = description
+
+    # model authors
+    authors = data['-> model authors'].strip().split('\r\n')
+
+    if authors[0] == "_No response_":
+        try:
+            author_list = publication_record["author"]
+        except:
+            author_list = []
+            error_log += "**Model authors**\n"
+            error_log += "Error: no authors found \n"
+    else:
+        author_list, log = get_authors(authors)
+        if log:
+            error_log += "**Model authors**\n" + log
+
+    data_dict["authors"] = author_list
+
+    # scientific keywords
+    keywords = [x.strip() for x in data["-> scientific keywords"].split(",")]
+
+    if keywords[0] == "_No response_":
+        keywords = []
+        error_log += "**Scientific keywords**\n"
+        error_log += "Warning: No keywords given \n"
+
+    data_dict["keywords"] = keywords
+
+    # funder
+    funders = [x.strip() for x in data["-> funder"].split(",")]
+
+    if funders[0] == "_No response_":
+        try:
+            funder_list = publication_record['funder']
+        except:
+            funder_list = []
+            error_log += "**Funder**\n"
+            error_log += "Warning: No funders provided or found in publication. \n"
+    else:
+        funder_list, log = get_funders(funders)
+        if log:
+            error_log += "**Funder**\n" + log
+
+    data_dict["funder"] = funder_list
+
+    #############
+    # Section 2
+    #############
+    # include model code
+    model_code = data["-> include model code ?"].strip().split("\n")
+
+    selection = parse_yes_no_choice(model_code)
+    if type(selection) is bool:
+        data_dict["include_model_code"] = selection
+    if type(selection) is str:
+        error_log += "**Include model code?**\n" + selection + "\n"
+
+    # model code URI/DOI
+    model_code_uri = data["-> model code URI/DOI"].strip()
+
+    if model_code_uri == "_No response_":
+        error_log += "**Model code URI/DOI**\n"
+        error_log += "Warning: No URI/DOI provided. \n"
+    else:
+        response = check_uri(model_code_uri)
+        if response == "OK":
+            data_dict["model_code_uri"] = model_code_uri
+        else:
+            error_log += "**Model code URI/DOI**\n" + response + "\n"
+
+    # include model output data
+    model_output = data["-> include model output data?"].strip().split("\n")
+    
+    selection = parse_yes_no_choice(model_output)
+    if type(selection) is bool:
+        data_dict["include_model_output"] = selection
+    if type(selection) is str:
+        error_log += "**Include model output data?**\n" + selection + "\n"
+
+    # model output URI/DOI
+    model_output_uri = data["-> model output URI/DOI"].strip()
+
+    if model_output_uri == "_No response_":
+        error_log += "**Model output URI/DOI**\n"
+        error_log += "Warning: No URI/DOI provided. \n"
+    else:
+        response = check_uri(model_output_uri)
+        if response == "OK":
+            data_dict["model_output_uri"] = model_output_uri
+        else:
+            error_log += "**Model output URI/DOI**\n" + response + "\n"
 
 
-# Identify funders
-parse_log += "**Funder**\n"
+    #############
+    # Section 3
+    #############
+    # software framework DOI/URI
+    software_doi = data["-> software framework DOI/URI"].strip()
 
-funders = [x.strip() for x in data["-> funder"].split(",")]
-
-if funders[0] == "_No response_":
-    try:
-        funder_list = publication_record['funder']
-        parse_log += "_Funder list taken from associated publication_ \n"
-    except:
-        funder_list = []
-        parse_log += "- Warning: No funders provided or found in publication. \n"
-else:
-    funder_list, log = get_funders(funders)
-    parse_log += log
-
-parse_log += "\n"
-parse_log += "The following funder(s) were found successfully:\n"
-for funder in funder_list:
-    parse_log += f"- {funder['name']} \n"
-parse_log += "\n"
-
-#############
-# Section 2
-#############
-
-#############
-# Section 3
-#############
-
-# Software Framework DOI
-parse_log += "**Software Framework DOI/URI**\n"
-
-software_doi = data["-> software framework DOI/URI"].strip()
-
-if software_doi == "_No response_":
-    parse_log += "No DOI/URI provided. \n"
     software_record={"@type": "SoftwareApplication"}
-else:
-    if "zenodo" in software_doi:
-        software_doi = software_doi.split("zenodo.")[1]
+
+    if software_doi == "_No response_":
+        error_log += "**Software Framework DOI/URI**\n"
+        error_log += "Warning: no DOI/URI provided.\n"
     else:
-        parse_log += "Haven't yet worked out how to deal with software dois that aren't zenodo \n"   
-    software_metadata, log1 = get_record("software", software_doi)
-    software_record, log2 = parse_software(software_metadata)
-    if log1 or log2:
-        parse_log += log1 + log2
+        if "zenodo" in software_doi:
+            software_doi = software_doi.split("zenodo.")[1]
+            try:
+                software_metadata, log1 = get_record("software", software_doi)
+                software_record, log2 = parse_software(software_metadata)
+                if log1 or log2:
+                    error_log += "**Software Framework DOI/URI**\n" + log1 + log2
+            except Exception as err:
+                error_log += "**Software Framework DOI/URI**\n"
+                error_log += f"Error: unable to obtain metadata for DOI `{software_doi}` \n"
+                error_log += f"`{err}`\n"
+        else:
+            error_log += "**Software Framework DOI/URI**\n Non-Zenodo software dois not yet supported\n"
+
+    # software framework source repository
+    software_repo = data["-> software framework source repository"].strip()
+
+    if software_repo == "_No response_":
+        error_log += "**Software Repository**\n"
+        error_log += "Warning: no repository URL provided. \n"
     else:
-        parse_log += f"Found software: _{software_record['name']}_. \n"
-parse_log += "\n"
+        response = check_uri(software_repo)
+        if response == "OK":
+            software_record["codeRepository"] = software_repo
+        else:
+            error_log += "**Software Repository**\n" + response + "\n"
 
-# Software Repository
-parse_log += "**Software Repository**\n"
+    # name of primary software framework
+    software_name = data["-> name of primary software framework (e.g. Underworld, ASPECT, Badlands, OpenFOAM)"].strip()
 
-software_repo = data["-> software framework source repository"].strip()
+    if software_name == "_No response_":
+        try:
+            software_name = software_record['name']
+        except:
+            error_log += "**Name of primary software framework**\n"
+            error_log += "Error: no name found \n"
+    else:
+        software_record["name"] = software_name     # N.B. this will overwrite any name obtained from the DOI
 
-if software_repo == "_No response_":
-    parse_log += "No repository URL provided. \n"
-else:
-    software_record["codeRepository"] = software_repo
-    parse_log += software_repo + "\n"
-parse_log += "\n"
+    # software framework authors
+    authors = data['-> software framework authors'].strip().split('\r\n')
 
+    if authors[0] == "_No response_":
+        try:
+            software_author_list = software_record["author"]
+        except:
+            software_author_list = []
+            error_log += "**Software framework authors**\n"
+            error_log += "Error: no authors found \n"
+    else:
+        software_author_list, log = get_authors(authors)
+        software_record["author"] = software_author_list     # N.B. this will overwrite any name obtained from the DOI
+        if log:
+            error_log += "**Software framework authors**\n" + log
 
-# Software Name
-parse_log += "**Software Name**\n"
+    # software & algorithm keywords
+    software_keywords = [x.strip() for x in data["-> software & algorithm keywords"].split(",")]
 
-software_name = data["-> name of primary software framework (e.g. Underworld, ASPECT, Badlands, OpenFOAM)"].strip()
+    if software_keywords[0] == "_No response_":
+        error_log += "**Software & algorithm keywords**\n"
+        error_log += "Warning: no keywords given. \n"
+    else:
+        software_record["keywords"] = software_keywords
 
-if software_name == "_No response_":
-    try:
-        software_name = software_record['name']
-        parse_log += "_Name taken from DOI record_ \n"
-    except:
-        software_name = ""
-        parse_log += "- Error: no software name found \n"
-else:
-    software_record["name"] = software_name
+    data_dict["software"] = software_record
 
-parse_log += software_name + "\n \n"
+    # computer URI/DOI
+    computer_uri = data["-> computer URI/DOI"].strip()
 
+    if computer_uri == "_No response_":
+        error_log += "**Computer URI/DOI**\n"
+        error_log += "Warning: No URI/DOI provided. \n"
+    else:
+        response = check_uri(computer_uri)
+        if response == "OK":
+            data_dict["computer_uri"] = computer_uri
+        else:
+            error_log += "**Computer URI/DOI**\n" + response + "\n"
 
-# Software Authors
-parse_log += "**Software Framework Authors**\n"
+    #############
+    # Section 4
+    #############
+    # landing page image and caption
+    img_string = data["-> add landing page image and caption"].strip()
 
-authors = data['-> software framework authors'].strip().split('\r\n')
+    if img_string == "_No response_":
+        error_log += "**Landing page image**\n"
+        error_log += "Error: No image uploaded.\n\n"
+    else:
+        landing_image_record, log = parse_image_and_caption(img_string, "landing_image")
+        if log:
+            error_log += "**Landing page image**\n" + log + "\n"
+        data_dict["landing_image"] = landing_image_record
 
-if authors[0] == "_No response_":
-    try:
-        software_author_list = software_record["author"]
-        parse_log += "_Author list taken from software DOI record_ \n"
-    except:
-        software_author_list = []
-        parse_log += "- Error: no authors found \n"
-else:
-    software_author_list, log = get_authors(authors)
-    software_record["author"] = software_author_list
-    parse_log += log
+    # animation
+    img_string = data["-> add an animation (if relevant)"].strip()
 
-parse_log += "\n"
-parse_log += "The following author(s) were found successfully:\n"
-for author in software_author_list:
-    if "givenName" in author:
-        parse_log += f"- {author['givenName']} {author['familyName']} "
-    elif "name" in author:
-        parse_log += f"- {author['name']} "
-    if "@id" in author:
-        parse_log += f"({author['@id']})"
-    parse_log += "\n"
-parse_log += "\n"
+    if img_string == "_No response_":
+        error_log += "**Animation**\n"
+        error_log += "Warning: No animation uploaded.\n\n"
+    else:
+        animation_record, log = parse_image_and_caption(img_string, "animation")
+        if log:
+            error_log += "**Animation**\n" + log + "\n"
+        data_dict["animation"] = animation_record
 
+    # graphic abstract
+    img_string = data["-> add a graphic abstract figure (if relevant)"].strip()
 
-# Software Keywords
-parse_log += "**Software & algorithm keywords**\n"
+    if img_string == "_No response_":
+        error_log += "**Graphic abstract**\n"
+        error_log += "Warning: No image uploaded.\n\n"
+    else:
+        graphic_abstract_record, log = parse_image_and_caption(img_string, "graphic_abstract")
+        if log:
+            error_log += "**Graphic abstract**\n" + log + "\n"
+        data_dict["graphic_abstract"] = graphic_abstract_record
 
-software_keywords = [x.strip for x in data["-> software & algorithm keywords"].split(",")]
-if software_keywords[0] == "_No response_":
-    parse_log += "No keywords given\n"
-else:
-    software_record["keywords"] = software_keywords
-    for keyword in software_keywords:
-        parse_log += f"- {keyword} \n"
-parse_log += "\n"
+    # model setup figure
+    img_string = data["-> add a model setup figure (if relevant)"].strip()
 
+    if img_string == "_No response_":
+        error_log += "**Model setup figure**\n"
+        error_log += "Warning: No image uploaded.\n\n"
+    else:
+        model_setup_fig_record, log = parse_image_and_caption(img_string, "model_setup")
+        if log:
+            error_log += "**Model setup figure**\n" + log + "\n"
+        data_dict["model_setup_figure"] = model_setup_fig_record
 
-# Computer URI/DOI
-parse_log += "**Computer URI/DOI**\n"
+    # description
+    model_description = data["-> add a description of your model setup"].strip()
 
-computer_doi = data["-> computer URI/DOI"].strip()
-if computer_doi == "_No response_":
-    parse_log += "No URI/DOI given\n"
-else:
-    parse_log += f"- {computer_doi} \n"
-parse_log += "\n"
-
-
-
-#############
-# Section 4
-#############
-
-# Landing page image and caption
-parse_log += "**Landing page image**\n"
-
-img_string = data["-> add landing page image and caption"].strip()
-
-if img_string == "_No response_":
-    parse_log += "No image uploaded.\n\n"
-else:
-    landing_image_record, log = parse_image_and_caption(img_string, "landing_image")
-    if log:
-        parse_log += log
-    if "filename" in landing_image_record:
-        parse_log += f"Filename: {landing_image_record['filename']}\n"
-    if "caption" in landing_image_record:
-        parse_log += f"Caption: {landing_image_record['caption']}\n\n"
-
-
-# Animation
-parse_log += "**Animation**\n"
-
-img_string = data["-> add an animation (if relevant)"].strip()
-
-if img_string == "_No response_":
-    parse_log += "No image uploaded.\n\n"
-else:
-    animation_record, log = parse_image_and_caption(img_string, "animation")
-    if log:
-        parse_log += log
-    if "filename" in animation_record:
-        parse_log += f"Filename: {animation_record['filename']}\n"
-    if "caption" in animation_record:
-        parse_log += f"Caption: {animation_record['caption']}\n\n"
+    if model_description == "_No response_":
+        error_log += "**Model setup description**\n"
+        error_log += "Warning: No description given \n"
+    else:
+        data_dict["model_setup_description"] = model_description
 
 
-# Graphic abstract
-parse_log += "**Graphic abstract**\n"
+    return data_dict, error_log
 
-img_string = data["-> add a graphic abstract figure (if relevant)"].strip()
-
-if img_string == "_No response_":
-    parse_log += "No image uploaded.\n\n"
-else:
-    graphic_abstract_record, log = parse_image_and_caption(img_string, "graphic_abstract")
-    if log:
-        parse_log += log
-    if "filename" in graphic_abstract_record:
-        parse_log += f"Filename: {graphic_abstract_record['filename']}\n"
-    if "caption" in graphic_abstract_record:
-        parse_log += f"Caption: {graphic_abstract_record['caption']}\n\n"
-
-
-# Model setup figure
-parse_log += "**Model setup figure**\n"
-
-img_string = data["-> add a model setup figure (if relevant)"].strip()
-
-if img_string == "_No response_":
-    parse_log += "No image uploaded.\n\n"
-else:
-    model_setup_fig_record, log = parse_image_and_caption(img_string, "model_setup")
-    if log:
-        parse_log += log
-    if "filename" in model_setup_fig_record:
-        parse_log += f"Filename: {model_setup_fig_record['filename']}\n"
-    if "caption" in model_setup_fig_record:
-        parse_log += f"Caption: {model_setup_fig_record['caption']}\n\n"
-
-# Model setup description
-parse_log += "**Model setup description**\n"
-
-model_description = data["-> add a description of your model setup"].strip()
-parse_log += model_description + "\n"
-
-
-parse_log += "\n"
-parse_log += "When you have finished adding file descriptions and fixing any identified errors, please add a 'Review Requested' label to this issue."
-
-issue.create_comment(parse_log)
