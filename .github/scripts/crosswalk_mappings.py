@@ -66,4 +66,8 @@ dataset_creation_node_mapping = {"@id":None,
             "object":None,
             "result":None}
 
+default_issue_entity_mapping_list = [root_node_mapping,
+                model_inputs_node_mapping,
+                model_inputs_node_mapping,
+                dataset_creation_node_mapping]
 
