@@ -25,6 +25,9 @@ data, error_log = parse_issue(issue)
 # Convert dictionary to metadata json
 metadata = dict_to_metadata(data)
 
+#FOR TESTING - print out dictionary as a comment
+issue.create_comment("# M@TE crate \n"+str(metadata))
+
 # Move files to repo
 model_repo.create_file(".metadata/mate.json","add mate.json",metadata)
 
