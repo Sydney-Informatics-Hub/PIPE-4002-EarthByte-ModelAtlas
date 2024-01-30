@@ -78,7 +78,7 @@ jobs:
 
   createNewRepo:
     needs: createRepoAuthorization
-    if: ${{ needs.createRepoAuthorization.outputs.create_repo == true }}
+    if: ${{ needs.createRepoAuthorization.outputs.create_repo == 'true' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
