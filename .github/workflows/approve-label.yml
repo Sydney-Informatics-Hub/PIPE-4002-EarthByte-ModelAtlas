@@ -51,14 +51,17 @@ jobs:
     steps:
       - name: Verify Labeler
         id: verify_labeler
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          echo "create_repo=true" >> $GITHUB_OUTPUT
           ALLOWED_USERS="not_hvidy"
 
           IFS=',' read -ra ALLOWED_USERS_ARRAY <<< "$ALLOWED_USERS"
 
           USER_ALLOWED=false
           for ALLOWED_USER in "${ALLOWED_USERS_ARRAY[@]}"; do
-            if [ "$ALLOWED_USER" == "${{ github.event.sender.login }}" ]]; then
+            if [ "$ALLOWED_USER" == "${{ github.event.sender.login }}" ]; then
               USER_ALLOWED=true
               break
             fi
@@ -67,12 +70,12 @@ jobs:
           if [ "$USER_ALLOWED" == false ]; then
             echo "Error: User not allowed to add approved label."
             echo "::remove-label name='approved'"
-            echo "::set-output name=create-repo::false"
+            echo "create_repo=false" >> $GITHUB_OUTPUT
           fi
 
   createNewRepo:
     needs: createRepoAuthorization
-    if: ${{ needs.createRepoAuthorization.outputs['verify_labeler.create-repo'] != 'false' }}
+    if: ${{ needs.createRepoAuthorization.outputs.create_repo == true }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
