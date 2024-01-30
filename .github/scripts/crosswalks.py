@@ -198,7 +198,7 @@ def dict_to_report(issue_dict):
     return report
     
 
-def dict_to_metadata(issue_dict, mapping_list, filter_entities=True, flat_compact_crate=True):
+def dict_to_metadata(issue_dict, mapping_list=default_issue_entity_mapping_list, filter_entities=True, flat_compact_crate=True):
     
     """
     Converts an issue dictionary into a standardized metadata format using Research Object Crate (RO-Crate) structure,
@@ -241,7 +241,7 @@ def dict_to_metadata(issue_dict, mapping_list, filter_entities=True, flat_compac
     
     
     #flatten the crate (brings nested entities to the top level)
-    if flatten_crate is True:
+    if flat_compact_crate is True:
         flatten_crate(ro_crate)
 
     metadata_out = json.dumps(ro_crate)
