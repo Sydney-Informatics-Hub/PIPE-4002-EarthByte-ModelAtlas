@@ -51,8 +51,6 @@ jobs:
     steps:
       - name: Verify Labeler
         id: verify_labeler
-        env:
-          GITHUB_TOKEN: ${{ secrets.PAT }}
         run: |
           echo "create_repo=true" >> $GITHUB_OUTPUT
           ALLOWED_USERS="not_hvidy"
@@ -70,6 +68,7 @@ jobs:
           if [ "$USER_ALLOWED" == false ]; then
             echo "Error: User not allowed to add approved label."
             echo "::remove-label name='approved'"
+            gh api --method DELETE ${{ github.event.issue.labels_url }}/approved
             echo "create_repo=false" >> $GITHUB_OUTPUT
           fi
 
