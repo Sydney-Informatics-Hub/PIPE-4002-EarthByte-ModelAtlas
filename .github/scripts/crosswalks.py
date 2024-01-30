@@ -194,14 +194,57 @@ def dict_to_report(issue_dict):
     report += str(issue_dict)
 
     return report
+    
 
-def dict_to_metadata(issue_dict):
+def dict_to_metadata(issue_dict, mapping_list, filter_entities=True, flat_compact_crate=True):
+    
+    """
+    Converts an issue dictionary into a standardized metadata format using Research Object Crate (RO-Crate) structure,
+    applying entity simplification and mappings based on predefined templates and rules.
 
-    #To Do: properly crosswalk issue dictionary to ro-crate format
+    The function performs several key operations:
+    - Filters and simplifies entities within the issue dictionary based on a specified template if `filter_entities` is True.
+    - Loads a base RO-Crate template and applies direct mappings from the issue dictionary to the RO-Crate structure using `mapping_list`.
+    - Allows for custom modifications to the RO-Crate based on specific data within the issue dictionary.
+    - Optionally flattens the RO-Crate structure for a more compact representation if `flat_compact_crate` is True.
 
-    metadata = json.dumps(issue_dict)
+    Parameters:
+    - issue_dict (dict): The issue dictionary containing data that needs to be converted into metadata.
+    - mapping_list (list): A list of mappings that define how elements in the issue dictionary correspond to elements in the RO-Crate structure.
+    - filter_entities (bool, optional): If True, simplifies entities in the issue dictionary using predefined templates. Defaults to True.
+    - flat_compact_crate (bool, optional): If True, flattens the RO-Crate structure to bring nested entities to the top level. Defaults to True.
 
-    return metadata
+    Returns:
+    - str: A JSON string representing the metadata in the RO-Crate format.
+
+    Note:
+    The function relies on external functions to load entity templates, apply mappings, and customize the RO-Crate. These functions need to be defined separately.
+    """
+    
+    
+    #this takes the issue_dict and simplifies entities (e.g. @Type=Person) using templates defined at:
+    #https://github.com/ModelAtlasofTheEarth/metadata_schema/blob/main/mate_ro_crate/type_templates.json
+    if filter_entities is True:
+        entity_template = load_entity_template()
+        recursively_filter_key(issue_dict, entity_template)
+    
+    #load the RO-Crate template
+    ro_crate = load_crate_template()
+    
+    #Apply direct mappings between the issue_dict and the RO-Crate
+    dict_to_ro_crate_mapping(ro_crate, issue_dict,  mapping_list)
+    
+    #Add any further direct chnages to the RO-Crate based on issue_dict
+    customise_ro_crate(issue_dict, ro_crate)
+    
+    
+    #flatten the crate (brings nested entities to the top level)
+    if flatten_crate is True:
+        flatten_crate(ro_crate)
+
+    metadata_out = json.dumps(ro_crate)
+
+    return metadata_out
 
 def dict_to_yaml(issue_dict):
 
