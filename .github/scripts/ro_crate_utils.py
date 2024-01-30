@@ -322,3 +322,51 @@ def load_entity_template(entity_template_url="https://raw.githubusercontent.com/
         print(f"Failed to download the file. Error: {e}")
         return None
   
+
+def flatten_crate(crate):
+    """
+    Flattens a given RO-Crate by processing its '@graph' attribute. It iteratively applies two functions to each
+    entity within the '@graph':
+    
+    1. `search_replace_blank_node_ids()`: Assigns IDs to entities that lack them.
+    2. `search_replace_sub_dict()`: Moves nested dictionaries to the top level of the '@graph' and replaces
+       the original nested dictionaries with references to their new top-level '@id'.
+
+    The process repeats until the length of the '@graph' array stabilizes, indicating that all nested entities
+    have been processed, resulting in a flattened and compacted crate structure.
+
+    Parameters:
+    - crate (dict): The RO-Crate object to be flattened, expected to have an '@graph' key containing a list of entities.
+
+
+    Returns:
+    - dict: The flattened RO-Crate with nested entities processed and moved to the top level of the '@graph'.
+
+    Note:
+    This function assumes the presence of 'search_replace_blank_node_ids' and 'search_replace_sub_dict' functions
+    which are applied to each entity. It does not perform any validation on the input crate structure.
+    """
+
+    try:
+        current_length = len(crate['@graph'])
+        previous_length = current_length - 1
+
+        # Loop until the number of nodes in '@graph' stabilizes, indicating no more nested entities are found
+        while current_length > previous_length:
+            previous_length = current_length  # Update the length for comparison in the next iteration
+
+            for i in range(current_length):
+                # Apply the two functions to each entity in the '@graph'
+                search_replace_blank_node_ids(crate, i)
+                search_replace_sub_dict(crate, i)
+
+            # Update the current length after modifications
+            current_length = len(crate['@graph'])
+
+
+    except KeyError as e:
+        # Handle cases where the expected keys are missing in the input crate
+        print(f"Key error: {e}. The input crate might be missing required keys or has an incorrect structure.")
+    except TypeError as e:
+        # Handle cases where the input is not structured as expected (e.g., 'crate' is not a dict)
+        print(f"Type error: {e}. Please ensure the input crate is a properly structured dictionary.")
