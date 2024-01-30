@@ -69,6 +69,7 @@ jobs:
 
           if [ "$USER_ALLOWED" == false ]; then
             echo "Error: User not allowed to add approved label."
+            echo ${{ github.event.issue.labels_url}}
             gh api --method DELETE ${{ github.event.issue.labels_url }}/approved
             echo "create_repo=false" >> $GITHUB_OUTPUT
           fi
