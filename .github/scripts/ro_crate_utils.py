@@ -370,3 +370,12 @@ def flatten_crate(crate):
     except TypeError as e:
         # Handle cases where the input is not structured as expected (e.g., 'crate' is not a dict)
         print(f"Type error: {e}. Please ensure the input crate is a properly structured dictionary.")
+
+def customise_ro_crate(issue_dict, crate):
+    
+    """
+    Apply any customising of the crate based on user unput
+    """
+
+    pass
+    
