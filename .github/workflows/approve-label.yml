@@ -53,6 +53,9 @@ jobs:
         id: verify_labeler
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OWNER: ${{ github.event.repository.owner }}
+          REPO: ${{ github.event.repository.name }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
         run: |
           echo "create_repo=true" >> $GITHUB_OUTPUT
           ALLOWED_USERS="not_hvidy"
@@ -70,7 +73,7 @@ jobs:
           if [ "$USER_ALLOWED" == false ]; then
             echo "Error: User not allowed to add approved label."
             echo ${{ github.event.issue.labels_url}}
-            gh api --method DELETE ${{ github.event.issue.labels_url }}/approved
+            gh api --method DELETE /repos/${OWNER}/${REPO}/issues/${ISSUE_NUMBER}/labels/approved
             echo "create_repo=false" >> $GITHUB_OUTPUT
           fi
 
