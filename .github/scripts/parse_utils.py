@@ -4,7 +4,8 @@ import json
 import pandas as pd
 import subprocess
 
-from metadata_utils import get_record, get_authors, get_funders, parse_author, parse_publication, parse_software, is_orcid_format, check_uri, parse_image_and_caption
+from request_utils import get_record, check_uri
+from metadata_utils import get_authors, get_funders, parse_author, parse_publication, parse_software, is_orcid_format, parse_image_and_caption
 
 def parse_name_or_orcid(name_or_orcid):
     error_log = ""
