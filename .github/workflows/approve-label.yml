@@ -56,7 +56,15 @@ jobs:
 
           IFS=',' read -ra ALLOWED_USERS_ARRAY <<< "$ALLOWED_USERS"
 
-          if [[ ! "${ALLOWED_USERS_ARRAY[@]}" =~ "${{ github.event.sender.login }}" ]]; then
+          USER_ALLOWED=false
+          for ALLOWED_USER in "${ALLOWED_USERS_ARRAY[@]}"; do
+            if [ "$ALLOWED_USER" == "${github.event.sender.login}" ]]; then
+              USER_ALLOWED=true
+              break
+            fi
+          done
+
+          if [ "$USER_ALLOWED" == false ]; then
             echo "Error: User not allowed to add approved label."
             echo "::remove-label name='approved'"
             echo "::set-output name=create-repo::false"
