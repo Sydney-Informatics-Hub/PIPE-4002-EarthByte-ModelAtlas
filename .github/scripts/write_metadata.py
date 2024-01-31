@@ -2,6 +2,7 @@ import os
 from github import Github, Auth
 from parse_issue import parse_issue
 from crosswalks import dict_to_metadata
+from copy_files import copy_files
 
 # Environment variables
 token = os.environ.get("GITHUB_TOKEN")
@@ -30,6 +31,9 @@ issue.create_comment("# M@TE crate \n"+str(metadata))
 
 # Move files to repo
 model_repo.create_file(".metadata/mate.json","add mate.json",metadata)
+
+# Copy web material to repo
+copy_files(model_repo, "website_files/", data)
 
 # Report creation of repository
 issue.create_comment(f"Model repository created at https://github.com/{model_owner}/{model_repo_name}")

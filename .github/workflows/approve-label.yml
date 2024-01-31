@@ -124,4 +124,3 @@ jobs:
           ISSUE_NUMBER: ${{ github.event.issue.number }}
         run: |
           python3 .github/scripts/write_metadata.py
-          python3 .github/scripts/copy_files.py
