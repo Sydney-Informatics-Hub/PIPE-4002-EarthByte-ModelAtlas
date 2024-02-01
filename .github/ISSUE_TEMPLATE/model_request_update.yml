@@ -1,7 +1,7 @@
 ---
 name: new model request
 description: Submit a request for a new model
-title: "[request] <feature>"
+title: "Please provide a slug for you model. This will be the name of your model. Use the format 'familyname_year_keyword'"
 labels: ["new model"]
 
 body:
