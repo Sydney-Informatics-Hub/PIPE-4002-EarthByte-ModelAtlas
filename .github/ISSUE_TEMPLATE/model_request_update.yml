@@ -1,7 +1,7 @@
 ---
 name: New model request
 description: Submit a new model request
-title: "<familyname_year_keyword>  (please replace angle bracket text with your model details, e.g. carey_1965_expansion)"
+title: "<familyname_year_keyword>  (please replace angle bracket text with your model details) e.g. carey_1965_expansion"
 labels: ["new model"]
 
 body:
