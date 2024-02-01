@@ -2,6 +2,7 @@
 name: new model request
 description: Submit a new model request
 title: "Please use the format 'familyname_year_keyword', e.g. 'carey_1965_expansion'"
+placeholder: "keyword1, keyword2, ..."
 labels: ["new model"]
 
 
