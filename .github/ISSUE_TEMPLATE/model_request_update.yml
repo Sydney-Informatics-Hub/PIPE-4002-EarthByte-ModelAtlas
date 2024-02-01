@@ -1,5 +1,6 @@
 ---
 name: new model request
+description: Submit a request for a new model
 labels: ["new model"]
 
 body:
