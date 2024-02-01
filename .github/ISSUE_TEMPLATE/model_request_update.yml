@@ -1,7 +1,6 @@
 ---
 name: Test
 description: Submit request
-title: "[request] <feature>"
 labels: ["new model"]
 
 body:
