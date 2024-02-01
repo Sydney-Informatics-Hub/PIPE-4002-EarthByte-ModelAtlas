@@ -1,7 +1,8 @@
-name: new model request
-description: Submit a new model request
-title: "🦠 Model Request: <name>"
+name: M@TE Model Request
+description: Request a model to be included in the hub
+title: "M@TE Model Request: <name>"
 labels: ["new model"]
+
 
 
 - type: markdown
