@@ -1,5 +1,5 @@
 ---
-name: Test
+name: new model request
 description: Submit a request for a new model
 title: "[request] <feature>"
 labels: ["new model"]
