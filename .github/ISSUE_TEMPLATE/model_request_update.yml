@@ -1,7 +1,7 @@
 ---
 name: Test
 description: Submit a request for a new model
-title: "[request] <feature>"
+title: "<familyname_year_keyword>  (please replace with your details)"
 labels: ["new model"]
 
 body:
