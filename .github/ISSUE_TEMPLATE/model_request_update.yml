@@ -1,7 +1,7 @@
 ---
 name: New model request
 description: Submit a new model request
-title: "<familyname_year_keyword>  (please replace with your details)"
+title: "<familyname_year_keyword>  (please replace with details applicable to your model, e.g. carey_1965_expansion)"
 labels: ["new model"]
 
 body:
