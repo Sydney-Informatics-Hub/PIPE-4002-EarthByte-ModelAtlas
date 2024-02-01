@@ -3,7 +3,7 @@ import re
 import subprocess
 import pandas as pd
 
-from request_utils import get_record, check_uri
+from improved_request_utils import get_record, check_uri
 from parse_metadata_utils import parse_publication, parse_software
 from parse_utils import parse_name_or_orcid, parse_yes_no_choice, get_authors, get_funders, parse_image_and_caption
 
@@ -37,7 +37,7 @@ def parse_issue(issue):
         if proposed_slug != slug:
             error_log += "**Model Repository Slug**\n"
             error_log += f"Warning: Model repo cannot be created with proposed slug `{proposed_slug}`. \n"
-            error_log += f"Either propose a new slug or repo will be created with name `{slug}`. \n" 
+            error_log += f"Either propose a new slug or repo will be created with name `{slug}`. \n"
     except Exception as err:
         data_dict["slug"] = ""
         error_log += "**Model Repository Slug**\n"
@@ -99,7 +99,7 @@ def parse_issue(issue):
             error_log += "**Associated Publication**\n"
             error_log += f"Error: unable to obtain metadata for DOI `{publication_doi}` \n"
             error_log += f"`{err}`\n"
-    
+
     data_dict["publication"] = publication_record
 
     # title
@@ -199,7 +199,7 @@ def parse_issue(issue):
 
     # include model output data
     model_output = data["-> include model output data?"].strip().split("\n")
-    
+
     selection = parse_yes_no_choice(model_output)
     if type(selection) is bool:
         data_dict["include_model_output"] = selection
@@ -373,4 +373,3 @@ def parse_issue(issue):
 
 
     return data_dict, error_log
-

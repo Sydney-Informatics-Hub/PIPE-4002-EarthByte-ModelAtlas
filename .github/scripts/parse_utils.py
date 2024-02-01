@@ -3,7 +3,7 @@ import requests
 import filetype
 from filetypes import Svg
 
-from request_utils import get_record, search_organization
+from improved_request_utils import get_record, search_organization
 from parse_metadata_utils import parse_author, parse_organization
 
 def parse_name_or_orcid(name_or_orcid):
@@ -103,7 +103,7 @@ def get_funders(funder_list):
 def parse_image_and_caption(img_string, default_filename):
     log = ""
     image_record = {}
-    
+
     md_regex = r"\[(?P<filename>.*?)\]\((?P<url>.*?)\)"
     html_regex = r'alt="(?P<filename>[^"]+)" src="(?P<url>[^"]+)"'
 
@@ -139,4 +139,3 @@ def parse_image_and_caption(img_string, default_filename):
         log += "Error: No caption found for image.\n"
 
     return image_record, log
-
