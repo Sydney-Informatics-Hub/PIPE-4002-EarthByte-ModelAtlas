@@ -1,0 +1,93 @@
+name: M@TE Model Request - Draft
+description: Request a model to be included in the hub
+title: "M@TE Model Request: <name>"
+labels: ["new model"]
+
+body:
+  - type: markdown
+    attributes:
+      value: "Thank you for taking the time to open a Model Request!"
+
+  - type: markdown
+    attributes:
+      value: "## About your model"
+
+  - type: input
+    id: title
+    attributes:
+      label: Title
+      description: "Suggest a title for your model"
+      placeholder: "Expanding Earth"
+    validations:
+      required: true
+
+  - type: input
+    id: publication
+    attributes:
+      label: Associated Publication DOI
+      description: "If your model has an assoicated publication, enter it here."
+      placeholder: "https://doi.org/10.xxxx/xxxxxxxxxxxx or doi:10.xxxx/xxxxxxxxxxxx"
+
+  - type: textarea
+    id: authors
+    attributes:
+      label: Author(s)
+      description: "List the authors, one per line, in the format _Lastname, Firstname_ or ORCID iD. If you have provided a DOI of an associated publication and the author list is the same, you may leave this blank."
+
+  - type: textarea
+    id: abstract
+    attributes:
+      label: Abstract
+      description: "Please provide an abstract for your model (preferrably plain language). If you have provided a DOI of an associated publication, you may leave this blank to use its abstract."
+      placeholder: "Lorem ipsum dolor sit amet, consectetur adipiscing elit..."
+
+  - type: textarea
+    id: keywords
+    attributes:
+      label: Keywords
+      description: "Please provide keywords"
+      value: |
+        1.
+        2.
+        3.
+        ...
+    validations:
+      required: true
+
+  - type: dropdown
+    id: for_codes
+    attributes:
+      label: Field of Research (FoR) Codes
+      description: "Please add FoR Codes (see https://vocabs.ardc.edu.au/viewById/316)"
+      multiple: true
+      options:
+        - "3706: Geophysics"
+        - "370601: Applied geophysics"
+        - "370602: Electrial and electromagnetic methods in geophysics"
+        - "370603: Geodesy"
+        - "370604: Geodynamics"
+        - "370605: Geothermics and radiometrics"
+        - "370606: Gravimetrics"
+        - "370607: Magnetism and palaeomagnetism"
+        - "370608: Petrophysics and rock mechanics"
+        - "370609: Seismology and seismic exploration"
+        - "370610: Geophysics not elsewhere defined"
+    validations:
+      required: true
+
+
+  - type: textarea
+    id: funders
+    attributes:
+      label: Funder(s)
+      description: "Please add rows as required if more than 1 funder. If you have provided a DOI of an associated publication and the funders are identified in that record, you may leave this blank."
+
+
+  - type: input
+    id: model-license
+    attributes:
+      label: License
+      description: "If there is a license, please provide the name of the license (or None if there is no license specified). Please check our [model repository](https://airtable.com/shrUcrUnd7jB9ChZV) to explore valid licenses."
+      placeholder: "CC-BY-4.0"
+    validations:
+      required: true
