@@ -1,7 +1,7 @@
 ---
 name: new model request
 description: Submit a new model request
-title: "Please provide a model name \n : "<familyname_year_keyword>" 
+title: "Please provide a model name \n : <familyname_year_keyword>" 
 labels: ["new model"]
 
 
