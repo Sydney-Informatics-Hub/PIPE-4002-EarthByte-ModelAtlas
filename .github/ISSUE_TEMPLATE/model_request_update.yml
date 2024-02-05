@@ -1,7 +1,7 @@
 ---
 name: New model request
 description: Submit a new model request
-title: "[familyname_year_keyword]  (please replace text in square brackets with your model details)"
+title: "M@TE submission request from <Firstname Lastname> "
 labels: ["new model"]
 
 body:
