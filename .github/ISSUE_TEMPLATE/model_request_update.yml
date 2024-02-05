@@ -1,7 +1,7 @@
 ---
 name: New model request
 description: Submit a new model request
-title: "M@TE submission request from <Firstname Lastname> "
+title: "M@TE submission request from [@username]"
 labels: ["new model"]
 
 body:
