@@ -13,7 +13,7 @@ jobs:
 
       # setup python
       - name: setup python
-        uses: actions/setup-python@v4.7.0
+        uses: actions/setup-python@v5
         with:
           python-version: "3.10"
           cache: 'pip'
