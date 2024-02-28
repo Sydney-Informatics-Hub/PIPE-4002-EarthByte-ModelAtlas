@@ -1,0 +1,267 @@
+---
+name: Test
+description: Submit a request for a new model
+title: "[request] <feature>"
+labels: ["new model"]
+
+body:
+
+- type: markdown
+  attributes:
+    value: |
+        <h1 style=”font-size: 48px;”>What is this process all about?</h1>
+         1. construct metadata information for your model. <br />
+         2. spawn a repository for your model. <br />
+         3. collect specific resources so we can feature your model on the M@TE website <br />
+
+- type: markdown
+  attributes:
+    value: |
+        <h1 style=”font-size: 48px;”>What is this NOT about?</h1>
+         1. this form is not intended as a place to submit your model files (code, data, additional documents) <br />
+  
+         ...
+
+- type: markdown
+  attributes:
+    value: "## Section 1: summary of your model"   
+
+- type: input
+  id: creator 
+  attributes:
+    label: -> creator/contributor ORCID (or name) 
+    placeholder: "0000-0002-1270-4377 (Sam Carey)"
+    description: "Please provide your ORCID Id (or GivenName Familyname)"
+  validations:
+    required: true
+  
+- type: input
+  id: slug 
+  attributes:
+    label: -> slug
+    placeholder: "carey_1965_expansion"
+    description: "Please provide a slug for you model. This will be the name of your model. Use the format 'familyname_year_keyword'"
+  validations:
+    required: true
+
+- type: input
+  id: for_codes
+  attributes:
+    label: -> field of Research (FoR) Codes
+    placeholder: "370604, 370609"
+    description: "Please add FoR Codes, separated by commas (see https://vocabs.ardc.edu.au/viewById/316)"
+  validations:
+    required: true
+    
+- type: dropdown
+  id: model-license
+  attributes:
+    label: -> license
+    description: "If there is a license, please provide the name of the license (or None if there is no license specified). Please check our [model repository](https://airtable.com/shrUcrUnd7jB9ChZV) to explore valid licenses."
+    options:
+      - CC-BY-4.0
+      - AGPL-3.0
+      - GPL-3.0
+      - LGPL-3.0
+      - MPL-2.0
+      - Apache-2.0
+      - MIT
+      - BSL-1.0
+      - Unlicense
+      - No license
+  validations:
+    required: true
+
+- type: dropdown
+  id: about_metadata_tags
+  attributes:
+    label: -> model category
+    description: "Select relevant boxes"
+    multiple: true
+    options:
+      - "model published in study"
+      - "community benchmark"
+      - "attempted reproduction of a model"
+      - "missing data model"
+      - "other"
+
+- type: input
+  id: pub_doi 
+  attributes:
+    label: -> associated publication DOI
+    placeholder: "https://doi.org/10.47366/sabia.v5n1a3."
+    description: "By providing an associated publication DOI, we can prefill many of the remaining fields for Section 1. If no associated publication is provided, the following fields should be provided"
+
+- type: input
+  id: title
+  attributes:
+    label: -> title
+    placeholder: "title of you model"
+    description: "If no input provided, info. from publication DOI will be used"
+
+- type: textarea
+  id: description
+  attributes:
+    label: -> description
+    placeholder: "model description"
+    description: "if no input provided, info. from publication DOI will be used. Markdown formatting can be used here and will be rendered on the website."
+
+- type: textarea
+  id: model_authors
+  attributes:
+    label: -> model authors
+    placeholder: "ORCID Id (or John Citizen)"
+    description: "Please provide ORCID Ids for software framework authors (or GivenName Familyname). Separate with commas or by lines. If no input provided, authors from publication DOI will be used"
+    
+- type: input
+  id: keywords
+  attributes:
+    label: -> scientific keywords
+    placeholder: "keyword1, keyword2, ..."
+    description: "if no input provided, info. from publication DOI will be used"
+    
+- type: input
+  id: funder_ROR_URI
+  attributes:
+    label: -> funder
+    placeholder: "https://www.arc.gov.au/"
+    description: "Please provide a ROR/URI for funding organization. Search for RORs here: https://ror.org/"
+
+- type: markdown
+  attributes:
+    value: "## Section 2: your model code, output data"
+
+- type: markdown
+  attributes:
+    value: "_Adding your model code and model output data takes place later, once your model repository has been set up!._" 
+
+- type: checkboxes
+  id: code_include
+  attributes:
+    label: -> include model code ? 
+    options:
+      - label: "yes"
+      - label: "no"
+    description: "Will you submit code (scripts, input data, build details) as part of your M@TE model?"
+  validations:
+    required: true
+
+- type: input
+  id: code_doi 
+  attributes:
+    label: -> model code URI/DOI
+    placeholder: "https://doi.org/10.47366/sabia.v5n1a3."
+    description: "Does your model code have an existing DOI/URI"
+  
+- type: checkboxes
+  id: data_include
+  attributes:
+    label: -> include model output data? 
+    options:
+      - label: "yes"
+      - label: "no"
+    description: "Will you submit model output data as part of your M@TE model?"
+  validations:
+    required: true
+
+- type: input
+  id: data_doi 
+  attributes:
+    label: -> model output URI/DOI
+    placeholder: "https://doi.org/10.47366/sabia.v5n1a3."
+    description: "Does your model output data have an existing DOI/URI"
+
+
+
+- type: markdown
+  attributes:
+    value: "## Section 3: software framework and compute details"
+
+
+- type: input
+  id: software_framework_doi_uri 
+  attributes:
+    label: -> software framework DOI/URI
+    placeholder: "https://doi.org/10.5281/zenodo.7455999"
+    description: "By providing a DOI, we can prefill some of the remaining fields for Section 3"
+
+- type: input
+  id: software_framework_repository 
+  attributes:
+    label: -> software framework source repository
+    placeholder: "https://github.com/underworldcode/underworld2"
+    description: "If the software has a public source code repositoty, please add it here"
+
+- type: input
+  id: software_framework
+  attributes:
+    label: -> name of primary software framework (e.g. Underworld, ASPECT, Badlands, OpenFOAM) 
+    placeholder: "Underworld2"
+    description: "If no input provided, Title from software framework DOI will be used"
+
+- type: textarea
+  id: software_framework_authors
+  attributes:
+    label: -> software framework authors
+    placeholder: "ORCID Id (or John Citizen)"
+    description: "Please provide ORCID Ids for software framework authors (or GivenName Familyname). If no input provided, Title from software framework DOI will be used"
+
+- type: input
+  id: software_keywords
+  attributes:
+    label: -> software & algorithm keywords
+    placeholder: "Python, Finite element, MPI ..."
+    description: "Separate keywords by comma"
+
+- type: input
+  id: compute_doi 
+  attributes:
+    label: -> computer URI/DOI
+    placeholder: "https://doi.org/10.47366/sabia.v5n1a3."
+    description: "Please provide a DOI/URI for the computation resource (if relavent)"
+
+
+- type: markdown
+  attributes:
+    value: "## Section 4: web material (for mate.science)"
+
+- type: markdown
+  attributes:
+    value: "In this section we will gather some information so we can display your model on mate.science. Please leave blank if you do not want this to occur. Note that files and text can be added/changed later!" 
+
+
+
+- type: textarea
+  id: web_landing_page
+  attributes:
+    label: -> add landing page image and caption
+    placeholder: "Caption for landing page image"
+    description: "Please provide a landing page image by dragging an image file into this box. Max file size is 2 Mb. JPEG, PNG, SVG, PDF, PPTX, or ZIP are supported. Please also provide a short caption."
+
+- type: textarea
+  id: web_animation
+  attributes:
+    label: -> add an animation (if relevant) 
+    placeholder: "Caption for model animation"
+    description: "Please provide an animation by dragging a file into this box. GIF, MOV, MP4 are supported. Max file size is 20 Mb. Please also provide a short caption."
+
+- type: textarea
+  id: graphic_abstract
+  attributes:
+    label: -> add a graphic abstract figure (if relevant)
+    placeholder: "Caption for graphic abstract"
+    description: "Please provide a graphic abstract, or a figure that summariese key finding. Max file size is 2 Mb.  Please also provide a short caption."
+
+- type: textarea
+  id: model_setup
+  attributes:
+    label: -> add a model setup figure (if relevant)
+    placeholder: "Caption for model setup figure"
+    description: "Please provide a  model setup image by dragging an image file into this box. Max file size is 2 Mb.  Please also provide a short caption."
+
+- type: textarea
+  id: model_setup_description
+  attributes:
+    label: -> add a description of your model setup
+    placeholder: "The model uses a cartesian domain, with size 200 km x 200 km x 300 km."
+    description: "Please provide add a brief (< 300 words) description of your model setup, boundary condition, assumptions. Markdown formatting can be used here and will be rendered on the website."
